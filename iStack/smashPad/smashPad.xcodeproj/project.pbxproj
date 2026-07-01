@@ -6,14 +6,74 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		615265BB2FF503B300796BC6 /* smashPadWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 615265B12FF503B200796BC6 /* smashPadWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		615265C62FF5084300796BC6 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615265C52FF5084300796BC6 /* ConnectivityManager.swift */; };
+		615265C72FF5084B00796BC6 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615265C52FF5084300796BC6 /* ConnectivityManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		615265B92FF503B300796BC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6152658B2FF4E1CE00796BC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 615265B02FF503B200796BC6;
+			remoteInfo = "smashPadWatch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		615265BF2FF503B300796BC6 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				615265BB2FF503B300796BC6 /* smashPadWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		615265932FF4E1CE00796BC6 /* smashPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smashPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		615265B12FF503B200796BC6 /* smashPadWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "smashPadWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		615265C52FF5084300796BC6 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		615265C12FF5069700796BC6 /* Exceptions for "smashPadWatch Watch App" folder in "smashPad" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Components/HeartRateDisplay.swift,
+				Components/PrimaryButton.swift,
+			);
+			target = 615265922FF4E1CE00796BC6 /* smashPad */;
+		};
+		615265C22FF5069700796BC6 /* Exceptions for "smashPadWatch Watch App" folder in "smashPadWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Components/HeartRateDisplay.swift,
+				Components/PrimaryButton.swift,
+			);
+			target = 615265B02FF503B200796BC6 /* smashPadWatch Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		615265952FF4E1CE00796BC6 /* smashPad */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = smashPad;
+			sourceTree = "<group>";
+		};
+		615265B22FF503B200796BC6 /* smashPadWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				615265C12FF5069700796BC6 /* Exceptions for "smashPadWatch Watch App" folder in "smashPad" target */,
+				615265C22FF5069700796BC6 /* Exceptions for "smashPadWatch Watch App" folder in "smashPadWatch Watch App" target */,
+			);
+			path = "smashPadWatch Watch App";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +86,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		615265AE2FF503B200796BC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		6152658A2FF4E1CE00796BC6 = {
 			isa = PBXGroup;
 			children = (
+				615265C52FF5084300796BC6 /* ConnectivityManager.swift */,
 				615265952FF4E1CE00796BC6 /* smashPad */,
+				615265B22FF503B200796BC6 /* smashPadWatch Watch App */,
 				615265942FF4E1CE00796BC6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				615265932FF4E1CE00796BC6 /* smashPad.app */,
+				615265B12FF503B200796BC6 /* smashPadWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,10 +125,12 @@
 				6152658F2FF4E1CE00796BC6 /* Sources */,
 				615265902FF4E1CE00796BC6 /* Frameworks */,
 				615265912FF4E1CE00796BC6 /* Resources */,
+				615265BF2FF503B300796BC6 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				615265BA2FF503B300796BC6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				615265952FF4E1CE00796BC6 /* smashPad */,
@@ -68,6 +140,28 @@
 			);
 			productName = smashPad;
 			productReference = 615265932FF4E1CE00796BC6 /* smashPad.app */;
+			productType = "com.apple.product-type.application";
+		};
+		615265B02FF503B200796BC6 /* smashPadWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 615265BC2FF503B300796BC6 /* Build configuration list for PBXNativeTarget "smashPadWatch Watch App" */;
+			buildPhases = (
+				615265AD2FF503B200796BC6 /* Sources */,
+				615265AE2FF503B200796BC6 /* Frameworks */,
+				615265AF2FF503B200796BC6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				615265B22FF503B200796BC6 /* smashPadWatch Watch App */,
+			);
+			name = "smashPadWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "smashPadWatch Watch App";
+			productReference = 615265B12FF503B200796BC6 /* smashPadWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -81,6 +175,9 @@
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					615265922FF4E1CE00796BC6 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					615265B02FF503B200796BC6 = {
 						CreatedOnToolsVersion = 26.6;
 					};
 				};
@@ -100,12 +197,20 @@
 			projectRoot = "";
 			targets = (
 				615265922FF4E1CE00796BC6 /* smashPad */,
+				615265B02FF503B200796BC6 /* smashPadWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		615265912FF4E1CE00796BC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		615265AF2FF503B200796BC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -119,10 +224,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				615265C62FF5084300796BC6 /* ConnectivityManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		615265AD2FF503B200796BC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				615265C72FF5084B00796BC6 /* ConnectivityManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		615265BA2FF503B300796BC6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 615265B02FF503B200796BC6 /* smashPadWatch Watch App */;
+			targetProxy = 615265B92FF503B300796BC6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		6152659C2FF4E1CE00796BC6 /* Debug */ = {
@@ -257,12 +379,15 @@
 				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -291,12 +416,15 @@
 				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,6 +439,78 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		615265BD2FF503B300796BC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "smashPadWatch Watch App/smashPadWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "smashPadWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = smashPadWatch;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.taufiq.smashPad;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		615265BE2FF503B300796BC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "smashPadWatch Watch App/smashPadWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "smashPadWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = smashPadWatch;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.taufiq.smashPad;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
@@ -331,6 +531,15 @@
 			buildConfigurations = (
 				6152659F2FF4E1CE00796BC6 /* Debug */,
 				615265A02FF4E1CE00796BC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		615265BC2FF503B300796BC6 /* Build configuration list for PBXNativeTarget "smashPadWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				615265BD2FF503B300796BC6 /* Debug */,
+				615265BE2FF503B300796BC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
