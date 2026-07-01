@@ -145,9 +145,6 @@ Core Bluetooth enables seamless BLE communication between the iOS application an
       Possible Stress Episode Detected
                       │
                       ▼
-     Notification sent to iPhone Application
-                      │
-                      ▼
  Core Bluetooth sends command to ESP32 Smart Pillow
                       │
                       ▼
@@ -155,13 +152,13 @@ Core Bluetooth enables seamless BLE communication between the iOS application an
                       │
                       ▼
  User receives prompt:
- "Feeling stressed? Try a 2-minute stress relief session."
+ "Feeling stressed? Try a stress relief session."
                       │
                       ▼
         User punches / slaps the smart pillow
                       │
                       ▼
-  Impact Sensor (Shock Sensor + MPU6050) records impacts
+      Impact Sensor (MPU6050) records impacts
                       │
                       ▼
       Recovery timer starts while monitoring HR
