@@ -115,36 +115,112 @@ Responsibilities:
 
 ---
 
-# 🔄 System Workflow
+## 🔄 System Workflow
 
 ```text
-Apple Watch
-      │
-      ▼
-HealthKit reads heart rate
-      │
-      ▼
-Core Motion checks inactivity
-      │
-      ▼
-Potential Stress Episode?
-      │
-      ├── No → Continue Monitoring
-      │
-      ▼ Yes
-Core Bluetooth
-      │
-      ▼
-Smart Pillow Activated
-      │
-      ▼
-Guided Stress Relief
-      │
-      ▼
-Recovery Analytics Dashboard
+                 Apple Watch
+                      │
+      Continuously monitors heart rate
+                      │
+                      ▼
+     Core Motion verifies user is stationary
+                      │
+                      ▼
+ Heart Rate > Baseline + Threshold (30–60 sec)
+                      │
+                      ▼
+      Possible Stress Episode Detected
+                      │
+                      ▼
+     Notification sent to iPhone Application
+                      │
+                      ▼
+ Core Bluetooth sends command to ESP32 Smart Pillow
+                      │
+                      ▼
+         Smart Pillow activates (Green LED ON)
+                      │
+                      ▼
+ User receives prompt:
+ "Feeling stressed? Try a 2-minute stress relief session."
+                      │
+                      ▼
+        User punches / slaps the smart pillow
+                      │
+                      ▼
+  Impact Sensor (Shock Sensor + MPU6050) records impacts
+                      │
+                      ▼
+      Recovery timer starts while monitoring HR
+                      │
+                      ▼
+ Heart rate gradually returns near baseline
+                      │
+                      ▼
+        Session ends automatically
+                      │
+                      ▼
+ Dashboard displays recovery analytics,
+ stress history, and impact statistics
 ```
-
 ---
+
+## 📡 Detailed Interaction Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+
+    actor User
+    participant Watch as Apple Watch (watchOS)
+    participant HK as HealthKit
+    participant App as iPhone App (SwiftUI)
+    participant IoT as Smart Pillow (ESP32)
+
+    Note over User,IoT: Phase 1 — Monitoring
+
+    User->>Watch: Start Focus Session
+    Watch->>Watch: Start Extended Runtime Session
+    Watch->>HK: Observe heart rate continuously
+    Watch->>Watch: Monitor user activity with Core Motion
+
+    Note over Watch: User remains stationary
+
+    HK-->>Watch: Elevated heart rate detected
+
+    Watch->>Watch: Validate HR > baseline + threshold<br/>AND user is stationary for 30–60 seconds
+
+    Note over User,IoT: Phase 2 — Stress Detection
+
+    Watch->>App: Send "Potential Stress" event
+    App->>App: Start recovery timer
+    App->>IoT: BLE command → Turn ON Green LED
+    IoT-->>User: Smart pillow becomes active
+
+    App-->>User: "Feeling stressed?\nTry a 2-minute stress relief session."
+
+    Note over User,IoT: Phase 3 — Stress Relief
+
+    loop During each punch
+        User->>IoT: Punch / slap pillow
+        IoT->>IoT: Detect impact (Shock Sensor + MPU6050)
+        IoT-->>App: Send impact data via BLE
+        App->>App: Update dashboard in real time
+    end
+
+    Note over User,IoT: Phase 4 — Recovery
+
+    HK-->>Watch: Heart rate returns near baseline
+    Watch->>App: Send "Recovered" event
+    App->>App: Stop recovery timer
+    App->>IoT: BLE command → Turn OFF LED
+    IoT-->>User: Pillow deactivates
+
+    Watch->>Watch: End Extended Runtime Session
+
+    App->>HK: Save recovery metrics
+    App-->>User: Display recovery summary and analytics
+```
 
 # 🧠 Starting Assumption
 
