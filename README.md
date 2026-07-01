@@ -223,6 +223,7 @@ sequenceDiagram
     App->>HK: Save recovery metrics
     App-->>User: Display recovery summary and analytics
 ```
+---
 
 # 🧠 Starting Assumption
 
