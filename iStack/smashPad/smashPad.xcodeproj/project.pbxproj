@@ -7,42 +7,19 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		CF8ECC3D2FEA1DCF007128E8 /* iStack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iStack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		615265932FF4E1CE00796BC6 /* smashPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smashPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CF4C95902FF4DE3F003BF19F /* Exceptions for "Hardware" folder in "iStack" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				.vscode/extensions.json,
-				include/README,
-				lib/README,
-				platformio.ini,
-				src/main.cpp,
-				test/README,
-			);
-			target = CF8ECC3C2FEA1DCF007128E8 /* iStack */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CF8ECC3F2FEA1DCF007128E8 /* iStack */ = {
+		615265952FF4E1CE00796BC6 /* smashPad */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = iStack;
-			sourceTree = "<group>";
-		};
-		CF8ECC4C2FEA2091007128E8 /* Hardware */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				CF4C95902FF4DE3F003BF19F /* Exceptions for "Hardware" folder in "iStack" target */,
-			);
-			path = Hardware;
+			path = smashPad;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CF8ECC3A2FEA1DCF007128E8 /* Frameworks */ = {
+		615265902FF4E1CE00796BC6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -52,19 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CF8ECC342FEA1DCF007128E8 = {
+		6152658A2FF4E1CE00796BC6 = {
 			isa = PBXGroup;
 			children = (
-				CF8ECC4C2FEA2091007128E8 /* Hardware */,
-				CF8ECC3F2FEA1DCF007128E8 /* iStack */,
-				CF8ECC3E2FEA1DCF007128E8 /* Products */,
+				615265952FF4E1CE00796BC6 /* smashPad */,
+				615265942FF4E1CE00796BC6 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		CF8ECC3E2FEA1DCF007128E8 /* Products */ = {
+		615265942FF4E1CE00796BC6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CF8ECC3D2FEA1DCF007128E8 /* iStack.app */,
+				615265932FF4E1CE00796BC6 /* smashPad.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,66 +48,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CF8ECC3C2FEA1DCF007128E8 /* iStack */ = {
+		615265922FF4E1CE00796BC6 /* smashPad */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CF8ECC482FEA1DCF007128E8 /* Build configuration list for PBXNativeTarget "iStack" */;
+			buildConfigurationList = 6152659E2FF4E1CE00796BC6 /* Build configuration list for PBXNativeTarget "smashPad" */;
 			buildPhases = (
-				CF8ECC392FEA1DCF007128E8 /* Sources */,
-				CF8ECC3A2FEA1DCF007128E8 /* Frameworks */,
-				CF8ECC3B2FEA1DCF007128E8 /* Resources */,
+				6152658F2FF4E1CE00796BC6 /* Sources */,
+				615265902FF4E1CE00796BC6 /* Frameworks */,
+				615265912FF4E1CE00796BC6 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CF8ECC3F2FEA1DCF007128E8 /* iStack */,
-				CF8ECC4C2FEA2091007128E8 /* Hardware */,
+				615265952FF4E1CE00796BC6 /* smashPad */,
 			);
-			name = iStack;
+			name = smashPad;
 			packageProductDependencies = (
 			);
-			productName = iStack;
-			productReference = CF8ECC3D2FEA1DCF007128E8 /* iStack.app */;
+			productName = smashPad;
+			productReference = 615265932FF4E1CE00796BC6 /* smashPad.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		CF8ECC352FEA1DCF007128E8 /* Project object */ = {
+		6152658B2FF4E1CE00796BC6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2650;
+				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
-					CF8ECC3C2FEA1DCF007128E8 = {
-						CreatedOnToolsVersion = 26.5;
-						LastSwiftMigration = 2650;
+					615265922FF4E1CE00796BC6 = {
+						CreatedOnToolsVersion = 26.6;
 					};
 				};
 			};
-			buildConfigurationList = CF8ECC382FEA1DCF007128E8 /* Build configuration list for PBXProject "iStack" */;
+			buildConfigurationList = 6152658E2FF4E1CE00796BC6 /* Build configuration list for PBXProject "smashPad" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = CF8ECC342FEA1DCF007128E8;
+			mainGroup = 6152658A2FF4E1CE00796BC6;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = CF8ECC3E2FEA1DCF007128E8 /* Products */;
+			productRefGroup = 615265942FF4E1CE00796BC6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CF8ECC3C2FEA1DCF007128E8 /* iStack */,
+				615265922FF4E1CE00796BC6 /* smashPad */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CF8ECC3B2FEA1DCF007128E8 /* Resources */ = {
+		615265912FF4E1CE00796BC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -141,7 +115,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CF8ECC392FEA1DCF007128E8 /* Sources */ = {
+		6152658F2FF4E1CE00796BC6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -151,7 +125,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		CF8ECC462FEA1DCF007128E8 /* Debug */ = {
+		6152659C2FF4E1CE00796BC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -186,7 +160,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = Z9S574BV42;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -210,13 +184,12 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		CF8ECC472FEA1DCF007128E8 /* Release */ = {
+		6152659D2FF4E1CE00796BC6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -251,7 +224,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = Z9S574BV42;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -268,21 +241,19 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		CF8ECC492FEA1DCF007128E8 /* Debug */ = {
+		6152659F2FF4E1CE00796BC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z9S574BV42;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -295,29 +266,26 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Stev.iStack;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		CF8ECC4A2FEA1DCF007128E8 /* Release */ = {
+		615265A02FF4E1CE00796BC6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z9S574BV42;
+				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -330,13 +298,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Stev.iStack;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -346,25 +313,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CF8ECC382FEA1DCF007128E8 /* Build configuration list for PBXProject "iStack" */ = {
+		6152658E2FF4E1CE00796BC6 /* Build configuration list for PBXProject "smashPad" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CF8ECC462FEA1DCF007128E8 /* Debug */,
-				CF8ECC472FEA1DCF007128E8 /* Release */,
+				6152659C2FF4E1CE00796BC6 /* Debug */,
+				6152659D2FF4E1CE00796BC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF8ECC482FEA1DCF007128E8 /* Build configuration list for PBXNativeTarget "iStack" */ = {
+		6152659E2FF4E1CE00796BC6 /* Build configuration list for PBXNativeTarget "smashPad" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CF8ECC492FEA1DCF007128E8 /* Debug */,
-				CF8ECC4A2FEA1DCF007128E8 /* Release */,
+				6152659F2FF4E1CE00796BC6 /* Debug */,
+				615265A02FF4E1CE00796BC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = CF8ECC352FEA1DCF007128E8 /* Project object */;
+	rootObject = 6152658B2FF4E1CE00796BC6 /* Project object */;
 }

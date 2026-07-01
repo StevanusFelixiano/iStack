@@ -1,14 +1,14 @@
 //
-//  iStackApp.swift
-//  iStack
+//  smashPadApp.swift
+//  smashPad
 //
-//  Created by Stevanus Felixiano on 23/06/26.
+//  Created by Ahmad Taufiq Hidayat on 01/07/26.
 //
 
 import SwiftUI
 
 @main
-struct iStackApp: App {
+struct smashPadApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
