@@ -376,9 +376,11 @@
 				CODE_SIGN_ENTITLEMENTS = smashPad/smashPad.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				DEVELOPMENT_TEAM = Z9S574BV42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Thump;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -393,7 +395,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad;
+				PRODUCT_BUNDLE_IDENTIFIER = com.IoTry.Thump;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -413,9 +415,11 @@
 				CODE_SIGN_ENTITLEMENTS = smashPad/smashPad.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				DEVELOPMENT_TEAM = Z9S574BV42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Thump;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -430,7 +434,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad;
+				PRODUCT_BUNDLE_IDENTIFIER = com.IoTry.Thump;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -450,22 +454,23 @@
 				CODE_SIGN_ENTITLEMENTS = "smashPadWatch Watch App/smashPadWatch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				DEVELOPMENT_TEAM = Z9S574BV42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "smashPadWatch-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = smashPadWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = ThumpWatchApp;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app writes workout sessions to Apple Health to enable continuous heart rate monitoring during stress relief sessions.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "This app needs access to detect your motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.taufiq.smashPad;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.IoTry.Thump;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.IoTry.Thump.watchapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -488,22 +493,23 @@
 				CODE_SIGN_ENTITLEMENTS = "smashPadWatch Watch App/smashPadWatch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7K9RU4HS2D;
+				DEVELOPMENT_TEAM = Z9S574BV42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "smashPadWatch-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = smashPadWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = ThumpWatchApp;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app writes workout sessions to Apple Health to enable continuous heart rate monitoring during stress relief sessions.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "This app needs access to detect your motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.taufiq.smashPad;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.IoTry.Thump;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.taufiq.smashPad.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.IoTry.Thump.watchapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
