@@ -27,6 +27,12 @@ bool deviceConnected = false;
 const float PUNCH_THRESHOLD = 15.0; 
 
 // ==========================================
+// DEBOUNCE VARIABLES
+// ==========================================
+unsigned long lastPunchTime = 0;         // Record last punch time
+const unsigned long debounceDelay = 160; // Safe pause between punch (ms)
+
+// ==========================================
 // BLE Connection Control
 // ==========================================
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -149,20 +155,23 @@ void loop() {
         // B. Read tilt sensor (Position shock)
         int tiltState = digitalRead(TILT_PIN);
 
-        // C. Detect smash
-        if (accel_magnitude > PUNCH_THRESHOLD || tiltState == HIGH) {
-            Serial.print("💥 PUKULAN MASUK! Kekuatan: ");
+        unsigned long currentTime = millis();
+
+        if ((accel_magnitude > PUNCH_THRESHOLD || tiltState == HIGH) && (currentTime - lastPunchTime >= debounceDelay)) {
+            Serial.print("💥 PILLOW SMASHED! power: ");
             Serial.print(accel_magnitude);
             Serial.println(" m/s^2");
 
-            // Give signal to Iphone
-            pTxCharacteristic->setValue("PUNCH_DETECTED");
+            // create punch intensity data "PUNCH:32.25"
+            String txMessage = "PUNCH:" + String(accel_magnitude, 2);
+
+            // Give signal and intensity to Iphone
+            pTxCharacteristic->setValue(txMessage.c_str());
             pTxCharacteristic->notify();
             
-            // Add debounce delay to prevent BLE spam on a single punch
-            delay(1000); 
+            lastPunchTime = currentTime;
         }
     }
     
-    delay(20); // Small delay so the esp doesn't overheat
+    delay(10); // Small delay so the esp doesn't overheat
 }
