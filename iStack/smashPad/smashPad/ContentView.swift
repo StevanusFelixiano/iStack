@@ -65,8 +65,8 @@ struct ContentView: View {
                                 .foregroundColor(.secondary)
                             Text(String(format: "%.1f", bluetooth.lastPunchIntensity))
                                 .font(.system(size: 28, weight: .bold, design: .rounded))
-                                // Number turns red if the smash is very hard (> 30 m/s^2)
-                                .foregroundColor(bluetooth.lastPunchIntensity > 30.0 ? .red : .primary)
+                                // Number turns red if the smash is very hard (> 20 m/s^2)
+                                .foregroundColor(bluetooth.lastPunchIntensity > 20.0 ? .red : .primary)
                         }
                     }
                 }

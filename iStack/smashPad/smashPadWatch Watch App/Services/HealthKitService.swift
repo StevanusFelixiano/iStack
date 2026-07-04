@@ -74,7 +74,7 @@ class HealthKitService: NSObject, ObservableObject, WKExtendedRuntimeSessionDele
         healthStore.execute(query)
     }
     
-    // MARK: - Session Control (🌟 2. FIXED: Separated into Start and Stop for iPhone Control)
+    // MARK: - Session Control (FIXED: Separated into Start and Stop for iPhone Control)
         func startSession() {
             guard !isSessionActive else { return }
             
