@@ -168,7 +168,6 @@ void loop() {
         // C. Check for 10 seconds timeout
         if (isTensed && (currentTime - lightOnTime >= timeoutDuration)) {
             digitalWrite(LED_PIN, LOW); // Turn off lights automatically
-            isTensed = false;           // Reset tensed state
             Serial.println("⏱️ TIMEOUT: 10 seconds passed without a punch. Light turned off.");
         }
 
@@ -178,17 +177,17 @@ void loop() {
             Serial.print(accel_magnitude);
             Serial.println(" m/s^2");
 
-            // turn off the light
-            isTensed = false;
-            digitalWrite(LED_PIN, LOW); // Turn off lights automatically
-
             // create punch intensity data "PUNCH:32.25"
             String txMessage = "PUNCH:" + String(accel_magnitude, 2);
 
-            // Give signal and intensity to Iphone
-            pTxCharacteristic->setValue(txMessage.c_str());
-            pTxCharacteristic->notify();
-            
+            // turn off the light
+            if (isTensed) {
+                digitalWrite(LED_PIN, LOW);
+                // Give signal and intensity to Iphone
+                pTxCharacteristic->setValue(txMessage.c_str());
+                pTxCharacteristic->notify();
+            }
+
             lastPunchTime = currentTime;
         }
     }
