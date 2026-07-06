@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct RecoveryIllustration: View {
+
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         ZStack {
 
             Circle()
-                .fill(Color.blue.opacity(0.18))
+                .fill(Color.blue.opacity(colorScheme == .dark ? 0.18 : 0.12))
                 .frame(width: 280, height: 280)
                 .blur(radius: 50)
 
             Circle()
-                .fill(Color.blue.opacity(0.08))
+                .fill(Color.blue.opacity(colorScheme == .dark ? 0.08 : 0.05))
                 .frame(width: 220, height: 220)
 
             RoundedRectangle(cornerRadius: 30)
-                .fill(Color(.systemGray6))
+                .fill(
+                    colorScheme == .dark
+                    ? Color(red: 38/255, green: 38/255, blue: 38/255)
+                    : Color(.systemBackground)
+                )
                 .frame(width: 180, height: 340)
                 .overlay {
 
@@ -75,7 +82,10 @@ struct RecoveryIllustration: View {
                         .padding(.bottom, 22)
                     }
                 }
-                .shadow(color: .blue.opacity(0.35), radius: 20)
+                .shadow(
+                    color: .blue.opacity(colorScheme == .dark ? 0.35 : 0.2),
+                    radius: 20
+                )
 
             Image(systemName: "heart.text.square.fill")
                 .font(.system(size: 34))

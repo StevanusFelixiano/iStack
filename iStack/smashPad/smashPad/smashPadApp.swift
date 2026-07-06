@@ -6,12 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct smashPadApp: App {
+
     var body: some Scene {
         WindowGroup {
-            RootView()
+            AppThemeManager {
+                RootView()
+            }
         }
+        .modelContainer(for: [
+            Category.self,
+            Session.self,
+            HeartRate.self,
+            TenseEvent.self,
+            Punch.self
+        ])
     }
 }
