@@ -14,9 +14,7 @@ struct RootView: View {
     private var hasSeenOnboarding = false
 
     var body: some View {
-
         Group {
-
             if hasSeenOnboarding {
                 ContentView()
             } else {

@@ -10,6 +10,8 @@ import SwiftData
 
 struct ActivityView: View {
 
+    @State private var showConnectivity = false
+
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \Category.name)
@@ -18,12 +20,16 @@ struct ActivityView: View {
     @State private var showAddCategory = false
 
     var body: some View {
+
         NavigationStack {
+
             ZStack {
 
                 Color(.systemBackground)
                     .ignoresSafeArea()
+
                 VStack(alignment: .leading, spacing: 24) {
+
                     HStack {
 
                         Text("Activity")
@@ -32,7 +38,17 @@ struct ActivityView: View {
 
                         Spacer()
 
-                        ConnectivityButton { }
+                        ConnectivityButton {
+                            showConnectivity.toggle()
+                        }
+                        .popover(
+                            isPresented: $showConnectivity,
+                            attachmentAnchor: .point(.bottomTrailing),
+                            arrowEdge: .top
+                        ) {
+                            ConnectivityMenu(isPresented: $showConnectivity)
+                                .presentationCompactAdaptation(.popover)
+                        }
                     }
                     .padding(.top, -20)
 
@@ -40,7 +56,7 @@ struct ActivityView: View {
                     Pick an activity to track, or add your own.
                     This tracker is best for things where you'll
                     be sitting still, like studying or coding.
-                    Please also keep your smart pillow within 
+                    Please also keep your smart pillow within
                     reach.
                     """)
                     .font(.system(size: 20))
@@ -72,7 +88,7 @@ struct ActivityView: View {
 
                 if showAddCategory {
 
-                    Color.black.opacity(0.45)
+                    Color.black.opacity(0.1)
                         .ignoresSafeArea()
                         .onTapGesture {
                             withAnimation(.spring(response: 0.35)) {
