@@ -13,11 +13,10 @@ struct smashPadApp: App {
 
     var body: some Scene {
         WindowGroup {
-//            AppThemeManager {
-//                RootView()
-//            }
-            
-            ContentView()
+            AppThemeManager {
+                RootView()
+            }
+//            ContentView()
         }
         .modelContainer(for: [
             Category.self,

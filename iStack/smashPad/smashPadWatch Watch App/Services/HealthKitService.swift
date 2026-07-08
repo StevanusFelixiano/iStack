@@ -46,9 +46,19 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
                 
                 if success {
                     self.fetchRestingHeartRate()
+                    self.startSessionIfNeeded()
                 }
             }
         }
+    }
+    
+    func startSessionIfNeeded() {
+
+        guard isAuthorized else { return }
+
+        guard !isSessionActive else { return }
+
+        startSession()
     }
     
     // MARK: - Fetch Resting Heart Rate

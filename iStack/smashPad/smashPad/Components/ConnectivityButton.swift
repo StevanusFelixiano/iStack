@@ -15,7 +15,7 @@ struct ConnectivityButton: View {
     
     init(
             size: CGFloat = 42,
-            iconSize: CGFloat = 18,
+            iconSize: CGFloat = 20,
             action: @escaping () -> Void
         ) {
             self.size = size
@@ -26,7 +26,7 @@ struct ConnectivityButton: View {
     var body: some View {
         
         Button(action: action) {
-            Image(systemName: "point.3.connected.trianglepath.dotted")
+            Image(systemName: "waveform")
                 .font(.system(size: iconSize, weight: .heavy))
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(width: size, height: size)

@@ -8,6 +8,12 @@
 import SwiftUI
 import SwiftData
 
+enum MonitoringState {
+    case relaxed
+    case stressedPendingAction
+    case recovering
+}
+
 struct TrackingPage: View {
     @StateObject
     private var connectivity = ConnectivityManager.shared
@@ -25,6 +31,15 @@ struct TrackingPage: View {
     @State private var elapsedTime: TimeInterval = 0
     @State private var timer: Timer?
     @State private var lastSavedBPM = -1
+    @State private var showCancelConfirmation = false
+    
+    @State
+    private var monitoringState: MonitoringState = .relaxed
+
+    @State
+    private var lastRelaxedAt: Date = .distantPast
+
+    private let cooldown: TimeInterval = 60
     
     @StateObject
     private var bluetooth = BluetoothService.shared
@@ -102,6 +117,9 @@ struct TrackingPage: View {
             
             print("False Positive")
             
+            monitoringState = .relaxed
+            lastRelaxedAt = .now
+            
             bluetooth.turnOffPillowLED()
             
             firstPunchReceived = false
@@ -110,38 +128,45 @@ struct TrackingPage: View {
     }
     
     private func receivePunch(_ intensity: Double) {
+        guard monitoringState == .stressedPendingAction ||
+              monitoringState == .recovering else {
 
+            print("Playful punch ignored.")
+            return
+        }
+        
         if activeTenseEvent == nil {
-
+            
             falsePositiveTimer?.invalidate()
             falsePositiveTimer = nil
-
+            
             bluetooth.turnOffPillowLED()
-
+            
             firstPunchReceived = true
-
+            
             let event = TenseEvent(
                 startingHeartRate: Int(connectivity.latestHeartRate.rounded()),
                 detectedAt: .now,
                 recoveryStartedAt: .now,
                 session: session
             )
-
+            
             modelContext.insert(event)
-
+            
             activeTenseEvent = event
+            monitoringState = .recovering
         }
-
+        
         guard let event = activeTenseEvent else { return }
-
+        
         let punch = Punch(
             punchIntensity: Float(intensity),
             timestamp: .now,
             tenseEvent: event
         )
-
+        
         modelContext.insert(punch)
-
+        
         try? modelContext.save()
     }
     
@@ -154,7 +179,8 @@ struct TrackingPage: View {
         if save {
             try? modelContext.save()
         }
-        
+        monitoringState = .relaxed
+        lastRelaxedAt = .now
         activeTenseEvent = nil
         
         firstPunchReceived = false
@@ -267,7 +293,7 @@ struct TrackingPage: View {
             
             session.pausedAt = nil
         }
-        
+        monitoringState = .relaxed
         finishRecovery(save:false)
         
         session.endTime = .now
@@ -293,9 +319,10 @@ struct TrackingPage: View {
             VStack(spacing: 0) {
                 
                 TrackingTopBar(
-                    showConnectivity: $showConnectivity,
-                    onBack: cancelSession
-                )
+                    showConnectivity: $showConnectivity
+                ) {
+                    showCancelConfirmation = true
+                }
                 .padding(.bottom, 36)
                 
                 TrackingInfo(session: session)
@@ -370,19 +397,44 @@ struct TrackingPage: View {
             saveHeartRate(bpm)
         }
         .onReceive(connectivity.$currentStatus) { status in
-
+            
             switch status {
-
+                
             case "stressed":
-                bluetooth.turnOnPillowLED()
-                startFalsePositiveTimer()
-
-            case "relaxed":
-
-                if activeTenseEvent != nil {
-                    finishRecovery()
+                guard monitoringState == .relaxed else {
+                    return
                 }
 
+                guard Date().timeIntervalSince(lastRelaxedAt) >= cooldown else {
+                    return
+                }
+
+                monitoringState = .stressedPendingAction
+                NotificationManager.shared.showTensionNotification()
+                bluetooth.turnOnPillowLED()
+                startFalsePositiveTimer()
+                
+            case "relaxed":
+
+                switch monitoringState {
+
+                case .stressedPendingAction:
+                    // false alarm
+                    bluetooth.turnOffPillowLED()
+
+                    falsePositiveTimer?.invalidate()
+                    falsePositiveTimer = nil
+
+                    monitoringState = .relaxed
+                    lastRelaxedAt = .now
+
+                case .recovering:
+                    finishRecovery()
+
+                case .relaxed:
+                    break
+                }
+                
             default:
                 break
             }
@@ -398,6 +450,22 @@ struct TrackingPage: View {
             stopTimer()
             falsePositiveTimer?.invalidate()
             falsePositiveTimer = nil
+        }
+        .alert(
+            "Discard Session?",
+            isPresented: $showCancelConfirmation
+        ) {
+
+            Button("Cancel", role: .cancel) { }
+
+            Button("Discard Session", role: .destructive) {
+                cancelSession()
+            }
+
+        } message: {
+
+            Text("If you leave now, this monitoring session will be discarded and none of the collected data will be saved.")
+
         }
     }
 }

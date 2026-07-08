@@ -102,6 +102,12 @@ struct ContentView: View {
                     }
                 }
             }
+            .onAppear {
+                if hkService.isAuthorized {
+                    hkService.startSessionIfNeeded()
+
+                }
+            }
             .padding(.horizontal)
             .padding(.top, -14)
         }

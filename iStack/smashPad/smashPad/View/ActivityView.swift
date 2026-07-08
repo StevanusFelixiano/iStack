@@ -176,6 +176,8 @@ struct ActivityView: View {
                 .presentationDragIndicator(.visible)
             }
             .task {
+                NotificationManager.shared.requestPermission()
+                ConnectivityManager.shared.requestHealthKitAuthorizationOnPhone()
                 createDefaultCategories()
             }
         }
