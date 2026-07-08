@@ -69,6 +69,7 @@
 		B1D421EB2FFC9D6A00D5881D /* Exceptions for "smashPad" folder in "smashPad" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Info.plist,
 				Models/AllModelsForCopy.swift,
 			);
 			target = 615265922FF4E1CE00796BC6 /* smashPad */;
@@ -397,6 +398,7 @@
 				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = smashPad/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Thump;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth to connect to your thump pad.";
@@ -437,6 +439,7 @@
 				DEVELOPMENT_TEAM = 7K9RU4HS2D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = smashPad/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Thump;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth to connect to your thump pad.";
