@@ -11,8 +11,19 @@ struct TrackingControlPanel: View {
 
     @Binding var isPaused: Bool
     @Binding var isExpanded: Bool
+    @Binding var elapsedTime: TimeInterval
 
+    let onPauseResume: () -> Void
     let onEndSession: () -> Void
+
+    private var formattedTime: String {
+
+        let total = Int(elapsedTime)
+        let minutes = total / 60
+        let seconds = total % 60
+
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
 
     var body: some View {
 
@@ -23,37 +34,49 @@ struct TrackingControlPanel: View {
             .overlay {
 
                 VStack(spacing: 24) {
+
                     Capsule()
                         .fill(.secondary.opacity(0.5))
                         .frame(width: 42, height: 5)
                         .padding(.top, -8)
                         .padding(.bottom, -8)
-                    
-                    Text("00:00")
-                        .font(.system(size: 34,
-                                      weight: .medium,
-                                      design: .rounded))
-                        .foregroundColor(Color.indigo)
+
+                    Text(formattedTime)
+                        .font(
+                            .system(
+                                size: 34,
+                                weight: .medium,
+                                design: .rounded
+                            )
+                        )
+                        .foregroundColor(.indigo)
 
                     Button {
-                        withAnimation(.spring()) {
-                            isPaused.toggle()
-                            isExpanded.toggle()
-                        }
+
+                        onPauseResume()
 
                     } label: {
 
                         Image(systemName: isPaused ? "play.fill" : "pause")
                             .font(.system(size: 36))
                             .frame(width: 110, height: 110)
-                            .foregroundColor(isPaused ? Color.indigo.opacity(0.8) : .primary)
-                            .background(isPaused ? .indigo.opacity(0.2) : Color.primary.opacity(0.15))
+                            .foregroundColor(
+                                isPaused
+                                ? Color.indigo.opacity(0.8)
+                                : .primary
+                            )
+                            .background(
+                                isPaused
+                                ? Color.indigo.opacity(0.2)
+                                : Color.primary.opacity(0.15)
+                            )
                             .clipShape(Circle())
                     }
                     .padding(.bottom, 16)
                     .padding(.top, -10)
 
                     if isExpanded {
+
                         Button(action: onEndSession) {
 
                             HStack(spacing: 8) {
@@ -62,7 +85,12 @@ struct TrackingControlPanel: View {
                                     .fontWeight(.medium)
 
                                 Text("End Session")
-                                    .font(.system(size: 18, weight: .regular))
+                                    .font(
+                                        .system(
+                                            size: 18,
+                                            weight: .regular
+                                        )
+                                    )
                             }
                             .foregroundStyle(.red)
                             .padding(.vertical, 14)
@@ -74,7 +102,10 @@ struct TrackingControlPanel: View {
                         .padding(.horizontal, 24)
                         .padding(.bottom, 16)
                         .padding(.top, -10)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .transition(
+                            .move(edge: .bottom)
+                                .combined(with: .opacity)
+                        )
                     }
                 }
             }
@@ -88,6 +119,8 @@ struct TrackingControlPanel: View {
     TrackingControlPanel(
         isPaused: .constant(false),
         isExpanded: .constant(false),
+        elapsedTime: .constant(75),
+        onPauseResume: {},
         onEndSession: {}
     )
     .preferredColorScheme(.dark)

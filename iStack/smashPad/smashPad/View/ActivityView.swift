@@ -9,7 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct ActivityView: View {
+    @State private var selectedCategory: Category?
 
+    @AppStorage("hasSeenTrackingPermissionInfo")
+    private var hasSeenTrackingPermissionInfo = false
+    
     @State private var showConnectivity = false
     @State private var path = NavigationPath()
     @Environment(\.modelContext) private var modelContext
@@ -24,11 +28,11 @@ struct ActivityView: View {
     }
     
     private func startSession(for category: Category) {
-
         let session = Session(
             category: category,
             startTime: .now,
-            averageRestingHR: 75
+            averageRestingHR:
+            Int(ConnectivityManager.shared.restingHeartRate.rounded())
         )
 
         modelContext.insert(session)
@@ -84,10 +88,16 @@ struct ActivityView: View {
                     List {
                         ForEach(categories) { category in
 
-                            ActivityCard(
-                                title: category.name
-                            ) {
-                                startSession(for: category)
+                            ActivityCard(title: category.name) {
+
+                                if hasSeenTrackingPermissionInfo {
+
+                                    startSession(for: category)
+
+                                } else {
+
+                                    selectedCategory = category
+                                }
                             }
                             .listRowInsets(EdgeInsets(top: 9, leading: 0, bottom: 9, trailing: 0))
                             .listRowSeparator(.hidden)
@@ -105,12 +115,17 @@ struct ActivityView: View {
                         HStack {
                             Spacer()
 
-                            ActivityButton {
-                                withAnimation(.spring(response: 0.35)) {
-                                    showAddCategory = true
-                                }
-                            }
+                            HStack {
+                                Spacer()
 
+                                ActivityButton {
+                                    withAnimation(.spring(response: 0.35)) {
+                                        showAddCategory = true
+                                    }
+                                }
+
+                                Spacer()
+                            }
                             Spacer()
                         }
                         .listRowSeparator(.hidden)
@@ -141,6 +156,23 @@ struct ActivityView: View {
             }
             .navigationDestination(for: Session.self) { session in
                 TrackingPage(session: session)
+            }
+            .sheet(item: $selectedCategory) { category in
+
+                PermissionInfoView {
+
+                    hasSeenTrackingPermissionInfo = true
+
+                    selectedCategory = nil
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+
+                        startSession(for: category)
+
+                    }
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
             }
             .task {
                 createDefaultCategories()

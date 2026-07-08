@@ -16,6 +16,11 @@ final class Session {
 
     var startTime: Date
     var endTime: Date?
+
+    // NEW
+    var pausedAt: Date?
+    var totalPausedDuration: TimeInterval
+
     var averageRestingHR: Int
     var category: Category
 
@@ -29,12 +34,20 @@ final class Session {
         category: Category,
         startTime: Date,
         endTime: Date? = nil,
+        pausedAt: Date? = nil,
+        totalPausedDuration: TimeInterval = 0,
         averageRestingHR: Int
     ) {
         self.id = UUID()
+
         self.category = category
+
         self.startTime = startTime
         self.endTime = endTime
+
+        self.pausedAt = pausedAt
+        self.totalPausedDuration = totalPausedDuration
+
         self.averageRestingHR = averageRestingHR
     }
 }
@@ -46,37 +59,59 @@ extension Session {
         endTime ?? .now
     }
 
-    /// Full wall-clock duration of the session.
+    /// Total duration including pause time.
     var elapsedTime: TimeInterval {
         displayEndTime.timeIntervalSince(startTime)
     }
 
-    /// Total time spent in a "recovery" (pillow-punch calming) window across all tense events.
+    /// Total recovery duration.
     var totalRecoveryDuration: TimeInterval {
+
         tenseEvents.reduce(0) { partial, event in
-            guard let start = event.recoveryStartedAt, let end = event.recoveryEndedAt else {
+
+            guard
+                let start = event.recoveryStartedAt,
+                let end = event.recoveryEndedAt
+            else {
                 return partial
             }
+
             return partial + end.timeIntervalSince(start)
         }
     }
 
-    /// "Active" time — elapsed time minus time spent recovering.
-    var activityTime: TimeInterval {
-        max(elapsedTime - totalRecoveryDuration, 0)
+    /// Duration excluding pause.
+    var activeDuration: TimeInterval {
+
+        max(
+            elapsedTime - totalPausedDuration,
+            0
+        )
     }
 
-    /// All pillow punches logged across every tense event in this session.
+    /// Active duration excluding recovery.
+    var activityTime: TimeInterval {
+
+        max(
+            activeDuration - totalRecoveryDuration,
+            0
+        )
+    }
+
     var allPunches: [Punch] {
+
         tenseEvents.flatMap(\.punchData)
     }
 
     var punchCount: Int {
+
         allPunches.count
     }
 
-    /// Heart rate samples sorted chronologically, ready for the chart.
     var sortedHeartRates: [HeartRate] {
-        heartRates.sorted { $0.timestamp < $1.timestamp }
+
+        heartRates.sorted {
+            $0.timestamp < $1.timestamp
+        }
     }
 }

@@ -11,7 +11,8 @@ import Combine
 
 class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = ConnectivityManager()
-    
+    @Published var latestHeartRate: Double = 0
+    @Published var restingHeartRate: Double = 75
     @Published var currentStatus: String = "relaxed"
     // Property to track watch session state on the iPhone UI
     @Published var isWatchSessionActive: Bool = false
@@ -73,6 +74,18 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             
+#if os(iOS)
+            if let bpm = message["heartRate"] as? Double {
+                self.latestHeartRate = bpm
+                print("❤️ Received BPM: \(bpm)")
+            }
+            
+            if let rhr = message["restingHeartRate"] as? Double {
+
+                self.restingHeartRate = rhr
+            }
+#endif
+            
             // 1. iPhone receiving data from Apple Watch
             if let status = message["status"] as? String {
                 self.currentStatus = status
@@ -84,14 +97,30 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             
             // 🌟 2. Apple Watch receiving commands from iPhone
 #if os(watchOS)
+            
             if let command = message["command"] as? String {
+                
                 print("⌚️ Watch received command: \(command)")
-                if command == "start" {
+                
+                switch command {
+                    
+                case "start":
                     HealthKitService.shared.startSession()
-                } else if command == "stop" {
+                    
+                case "pause":
+                    HealthKitService.shared.pauseSession()
+                    
+                case "resume":
+                    HealthKitService.shared.resumeSession()
+                    
+                case "stop":
                     HealthKitService.shared.stopSession()
+                    
+                default:
+                    break
                 }
             }
+            
 #endif
         }
     }
@@ -102,25 +131,66 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         activationDidCompleteWith activationState: WCSessionActivationState,
         error: Error?
     ) {
-
-        #if os(iOS)
+        
+#if os(iOS)
         DispatchQueue.main.async {
             self.isWatchConnected =
-                session.isPaired &&
-                session.isWatchAppInstalled
+            session.isPaired &&
+            session.isWatchAppInstalled
         }
-        #endif
+#endif
     }
     
     func sessionReachabilityDidChange(_ session: WCSession) {
-
-        #if os(iOS)
+        
+#if os(iOS)
         DispatchQueue.main.async {
             self.isWatchConnected =
-                session.isReachable ||
-                (session.isPaired && session.isWatchAppInstalled)
+            session.isReachable ||
+            (session.isPaired && session.isWatchAppInstalled)
         }
-        #endif
+#endif
+    }
+    
+    func sendPauseCommandToWatch() {
+        guard WCSession.default.isReachable else { return }
+        
+        WCSession.default.sendMessage(
+            ["command": "pause"],
+            replyHandler: nil
+        )
+        
+        print("📱 Pause sent")
+    }
+    
+    func sendResumeCommandToWatch() {
+        guard WCSession.default.isReachable else { return }
+        
+        WCSession.default.sendMessage(
+            ["command": "resume"],
+            replyHandler: nil
+        )
+        
+        print("📱 Resume sent")
+    }
+    
+    func sendHeartRate(_ bpm: Double) {
+        
+        guard WCSession.default.isReachable else { return }
+        
+        WCSession.default.sendMessage(
+            ["heartRate": bpm],
+            replyHandler: nil
+        )
+    }
+    func sendRestingHeartRate(_ rhr: Double) {
+
+        guard WCSession.default.isReachable else { return }
+
+        WCSession.default.sendMessage(
+            ["restingHeartRate": rhr],
+            replyHandler: nil
+        )
     }
     
 #if os(iOS)

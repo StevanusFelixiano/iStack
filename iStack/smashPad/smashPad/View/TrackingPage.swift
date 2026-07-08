@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct TrackingPage: View {
+    @StateObject
+    private var connectivity = ConnectivityManager.shared
     
     @Bindable var session: Session
     
@@ -20,11 +22,227 @@ struct TrackingPage: View {
     @State private var isPaused = false
     @State private var isExpanded = false
     
-    // MARK: Session
+    @State private var elapsedTime: TimeInterval = 0
+    @State private var timer: Timer?
+    @State private var lastSavedBPM = -1
+    
+    @StateObject
+    private var bluetooth = BluetoothService.shared
+    
+    @State
+    private var activeTenseEvent: TenseEvent?
+    
+    @State
+    private var firstPunchReceived = false
+    
+    @State
+    private var falsePositiveTimer: Timer?
+    
+    // MARK: - Timer
+    
+    private var displayedElapsedTime: TimeInterval {
+        
+        if let endTime = session.endTime {
+            
+            return max(
+                endTime.timeIntervalSince(session.startTime)
+                - session.totalPausedDuration,
+                0
+            )
+        }
+        
+        if let pausedAt = session.pausedAt {
+            
+            return max(
+                pausedAt.timeIntervalSince(session.startTime)
+                - session.totalPausedDuration,
+                0
+            )
+        }
+        
+        return max(
+            Date().timeIntervalSince(session.startTime)
+            - session.totalPausedDuration,
+            0
+        )
+    }
+    
+    private func saveHeartRate(_ bpm: Double) {
+        
+        let value = Int(bpm.rounded())
+        
+        guard value != lastSavedBPM else { return }
+        
+        lastSavedBPM = value
+        
+        let heartRate = HeartRate(
+            heartRateBPM: value,
+            timestamp: .now,
+            session: session
+        )
+        
+        modelContext.insert(heartRate)
+        
+        try? modelContext.save()
+    }
+    
+    private func startFalsePositiveTimer() {
+        
+        guard activeTenseEvent == nil else { return }
+        guard falsePositiveTimer == nil else { return }
+        
+        firstPunchReceived = false
+        
+        falsePositiveTimer = Timer.scheduledTimer(
+            withTimeInterval: 60,
+            repeats: false
+        ) { _ in
+            
+            guard !firstPunchReceived else { return }
+            
+            print("False Positive")
+            
+            bluetooth.turnOffPillowLED()
+            
+            firstPunchReceived = false
+            falsePositiveTimer = nil
+        }
+    }
+    
+    private func receivePunch(_ intensity: Double) {
+
+        if activeTenseEvent == nil {
+
+            falsePositiveTimer?.invalidate()
+            falsePositiveTimer = nil
+
+            bluetooth.turnOffPillowLED()
+
+            firstPunchReceived = true
+
+            let event = TenseEvent(
+                startingHeartRate: Int(connectivity.latestHeartRate.rounded()),
+                detectedAt: .now,
+                recoveryStartedAt: .now,
+                session: session
+            )
+
+            modelContext.insert(event)
+
+            activeTenseEvent = event
+        }
+
+        guard let event = activeTenseEvent else { return }
+
+        let punch = Punch(
+            punchIntensity: Float(intensity),
+            timestamp: .now,
+            tenseEvent: event
+        )
+
+        modelContext.insert(punch)
+
+        try? modelContext.save()
+    }
+    
+    private func finishRecovery(save: Bool = true) {
+        
+        guard let event = activeTenseEvent else { return }
+        
+        event.recoveryEndedAt = .now
+        
+        if save {
+            try? modelContext.save()
+        }
+        
+        activeTenseEvent = nil
+        
+        firstPunchReceived = false
+        
+        falsePositiveTimer?.invalidate()
+        falsePositiveTimer = nil
+    }
+    
+    private func startTimer() {
+        
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            
+            DispatchQueue.main.async {
+                
+                elapsedTime = displayedElapsedTime
+                
+            }
+        }
+    }
+    
+    private func pauseTimer() {
+        
+        timer?.invalidate()
+    }
+    
+    private func resumeTimer() {
+        
+        startTimer()
+    }
+    
+    private func stopTimer() {
+        
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    // MARK: - Pause / Resume
+    
+    private func togglePauseResume() {
+        withAnimation(.spring()) {
+            isPaused.toggle()
+            isExpanded.toggle()
+        }
+        
+        if isPaused {
+            
+            session.pausedAt = .now
+            
+            try? modelContext.save()
+            
+            pauseTimer()
+            
+            ConnectivityManager.shared.sendPauseCommandToWatch()
+            
+        } else {
+            
+            if let pausedAt = session.pausedAt {
+                
+                session.totalPausedDuration +=
+                Date().timeIntervalSince(pausedAt)
+                
+                session.pausedAt = nil
+            }
+            
+            try? modelContext.save()
+            elapsedTime = displayedElapsedTime
+            
+            resumeTimer()
+            
+            ConnectivityManager.shared.sendResumeCommandToWatch()
+        }
+    }
+    
+    // MARK: - Session
     
     private func cancelSession() {
+        bluetooth.turnOffPillowLED()
+        falsePositiveTimer?.invalidate()
+        falsePositiveTimer = nil
+        
+        stopTimer()
         
         ConnectivityManager.shared.sendStopCommandToWatch()
+        
+        activeTenseEvent = nil
+        firstPunchReceived = false
         
         modelContext.delete(session)
         
@@ -34,17 +252,35 @@ struct TrackingPage: View {
     }
     
     private func endSession() {
+        bluetooth.turnOffPillowLED()
+        falsePositiveTimer?.invalidate()
+        falsePositiveTimer = nil
+        
+        stopTimer()
         
         ConnectivityManager.shared.sendStopCommandToWatch()
         
+        if let pausedAt = session.pausedAt {
+            
+            session.totalPausedDuration +=
+            Date().timeIntervalSince(pausedAt)
+            
+            session.pausedAt = nil
+        }
+        
+        finishRecovery(save:false)
+        
         session.endTime = .now
+        
+        // Update timer terakhir supaya sesuai data yang disimpan
+        elapsedTime = displayedElapsedTime
         
         try? modelContext.save()
         
         dismiss()
     }
     
-    // MARK: UI
+    // MARK: - UI
     
     var body: some View {
         
@@ -65,9 +301,8 @@ struct TrackingPage: View {
                 TrackingInfo(session: session)
                     .padding(.bottom, 100)
                 
-                
                 PunchCounter(
-                    punchCount: session.punchCount
+                    punchCount: bluetooth.punchCount
                 )
                 
                 Spacer()
@@ -75,13 +310,15 @@ struct TrackingPage: View {
             .padding(.horizontal, 24)
             .padding(.top, 12)
             
-            VStack(spacing: 0){
+            VStack(spacing: 0) {
                 
                 Spacer()
                 
                 TrackingControlPanel(
                     isPaused: $isPaused,
                     isExpanded: $isExpanded,
+                    elapsedTime: $elapsedTime,
+                    onPauseResume: togglePauseResume,
                     onEndSession: endSession
                 )
             }
@@ -92,13 +329,16 @@ struct TrackingPage: View {
                 Color.black.opacity(0.001)
                     .ignoresSafeArea()
                     .onTapGesture {
+                        
                         withAnimation(.spring()) {
                             showConnectivity = false
                         }
                     }
                 
                 VStack {
+                    
                     HStack {
+                        
                         Spacer()
                         
                         ConnectivityMenu(isPresented: $showConnectivity)
@@ -118,8 +358,48 @@ struct TrackingPage: View {
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .tabBar)
         .preferredColorScheme(.dark)
+        .onAppear {
+            elapsedTime = displayedElapsedTime
+            
+            startTimer()
+        }
+        .onReceive(connectivity.$latestHeartRate) { bpm in
+            
+            guard bpm > 0 else { return }
+            
+            saveHeartRate(bpm)
+        }
+        .onReceive(connectivity.$currentStatus) { status in
+
+            switch status {
+
+            case "stressed":
+                bluetooth.turnOnPillowLED()
+                startFalsePositiveTimer()
+
+            case "relaxed":
+
+                if activeTenseEvent != nil {
+                    finishRecovery()
+                }
+
+            default:
+                break
+            }
+        }
+        .onReceive(bluetooth.$lastPunchIntensity) { intensity in
+            
+            guard intensity > 0 else { return }
+            
+            receivePunch(intensity)
+        }
+        .onDisappear {
+            
+            stopTimer()
+            falsePositiveTimer?.invalidate()
+            falsePositiveTimer = nil
+        }
     }
-    
 }
 
 #Preview {
