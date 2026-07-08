@@ -34,24 +34,32 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     }
     
     // MARK: - Methods called by Apple Watch (Sending data to iPhone)
-    func sendStressAlert() {
-        if WCSession.default.isReachable {
-            WCSession.default.sendMessage(["status": "stressed"], replyHandler: nil)
+        func sendStressAlert() {
+            let message = ["status": "stressed"]
+            if WCSession.default.isReachable {
+                WCSession.default.sendMessage(message, replyHandler: nil)
+            } else {
+                WCSession.default.transferUserInfo(message)
+            }
         }
-    }
-    
-    func sendRelaxedAlert() {
-        if WCSession.default.isReachable {
-            WCSession.default.sendMessage(["status": "relaxed"], replyHandler: nil)
+        
+        func sendRelaxedAlert() {
+            let message = ["status": "relaxed"]
+            if WCSession.default.isReachable {
+                WCSession.default.sendMessage(message, replyHandler: nil)
+            } else {
+                WCSession.default.transferUserInfo(message)
+            }
         }
-    }
-    
-    // 🌟 THE MISSING FUNCTION: For Watch to sync its session state back to iPhone
-    func sendSessionSync(isActive: Bool) {
-        if WCSession.default.isReachable {
-            WCSession.default.sendMessage(["sessionStatus": isActive], replyHandler: nil)
+        
+        func sendSessionSync(isActive: Bool) {
+            let message = ["sessionStatus": isActive]
+            if WCSession.default.isReachable {
+                WCSession.default.sendMessage(message, replyHandler: nil)
+            } else {
+                WCSession.default.transferUserInfo(message)
+            }
         }
-    }
     
     // MARK: - Methods called by iPhone (Sending command to Apple Watch)
     func sendStartCommandToWatch() {
