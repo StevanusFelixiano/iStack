@@ -47,4 +47,12 @@ extension TenseEvent {
         guard let end = recoveryEndedAt ?? recoveryStartedAt else { return nil }
         return (detectedAt, end)
     }
+    var recoveryDuration: TimeInterval? {
+
+        guard let start = recoveryStartedAt,
+              let end = recoveryEndedAt
+        else { return nil }
+
+        return end.timeIntervalSince(start)
+    }
 }

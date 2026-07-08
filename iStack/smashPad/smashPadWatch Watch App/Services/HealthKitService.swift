@@ -23,10 +23,11 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     @Published var currentHeartRate: Double = 0.0
     @Published var isSessionActive = false
     @Published var restingHeartRate: Double = 75.0 // Default fallback value
+    @Published var isPaused = false
     
     @Published var isStationary: Bool = true
-        private var stressStrikeCount = 0
-        private let requiredStressStrikes = 3
+    private var stressStrikeCount = 0
+    private let requiredStressStrikes = 3
     
     private override init() {
         super.init()
@@ -65,6 +66,7 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
                 let rhr = average.doubleValue(for: HKUnit(from: "count/min"))
                 DispatchQueue.main.async {
                     self.restingHeartRate = rhr
+                    ConnectivityManager.shared.sendRestingHeartRate(rhr)
                     print("✅ Real RHR Found: \(rhr) BPM")
                 }
             } else {
@@ -76,6 +78,49 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     
     // MARK: - Session Control (FIXED: Separated into Start and Stop for iPhone Control)
     func startSession() {
+        guard !isSessionActive else { return }
+        isPaused = false
+        runtimeSession = WKExtendedRuntimeSession()
+        runtimeSession?.delegate = self
+        runtimeSession?.start()
+        
+        startHeartRateQuery()
+        startMotionTracking()
+        
+        DispatchQueue.main.async {
+            self.isSessionActive = true
+            ConnectivityManager.shared.sendSessionSync(isActive: true)
+        }
+        print("⌚️ Watch Session STARTED by iPhone")
+    }
+    
+    func stopSession() {
+        guard isSessionActive else { return }
+        
+        runtimeSession?.invalidate()
+        motionActivityManager.stopActivityUpdates()
+        
+        if let query = activeHeartRateQuery {
+            healthStore.stop(query)
+            activeHeartRateQuery = nil
+        }
+        
+        DispatchQueue.main.async {
+            
+            self.currentHeartRate = 0
+            self.isPaused = false
+            self.isSessionActive = false
+            ConnectivityManager.shared.sendSessionSync(isActive: false)
+        }
+        print("⌚️ Watch Session STOPPED by iPhone. All sensors are OFF.")
+    }
+    func pauseSession() {
+        
+        guard isSessionActive else { return }
+        guard !isPaused else { return }
+        isPaused = true
+        
+        if let query = activeHeartRateQuery {
             guard !isSessionActive else { return }
             
             // 3. new workout session config
@@ -111,11 +156,30 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
             
             motionActivityManager.stopActivityUpdates()
             
-            if let query = activeHeartRateQuery {
-                healthStore.stop(query)
-                activeHeartRateQuery = nil
-            }
+            healthStore.stop(query)
             
+            activeHeartRateQuery = nil
+        }
+        
+        motionActivityManager.stopActivityUpdates()
+        
+        print("⏸ Session Paused")
+    }
+    
+    func resumeSession() {
+        
+        guard isSessionActive else { return }
+        
+        guard isPaused else { return }
+        
+        isPaused = false
+        
+        startHeartRateQuery()
+        
+        startMotionTracking()
+        
+        print("▶️ Session Resumed")
+    }
             DispatchQueue.main.async {
                 self.currentHeartRate = 0.0 // Reset number on watch screen to 0
                 self.isSessionActive = false
@@ -125,19 +189,19 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
         }
     
     // MARK: - Sensor CoreMotion
-        private func startMotionTracking() {
-            if CMMotionActivityManager.isActivityAvailable() {
-                motionActivityManager.startActivityUpdates(to: .main) { [weak self] activity in
-                    guard let activity = activity else { return }
-                    
-                    // Considered Stationary if not walking, running, cycling
-                    let isMoving = activity.walking || activity.running || activity.cycling
-                    self?.isStationary = !isMoving
-                    
-                    print(isMoving ? "Moving" : "Stationary")
-                }
+    private func startMotionTracking() {
+        if CMMotionActivityManager.isActivityAvailable() {
+            motionActivityManager.startActivityUpdates(to: .main) { [weak self] activity in
+                guard let activity = activity else { return }
+                
+                // Considered Stationary if not walking, running, cycling
+                let isMoving = activity.walking || activity.running || activity.cycling
+                self?.isStationary = !isMoving
+                
+                print(isMoving ? "Moving" : "Stationary")
             }
         }
+    }
     
     // MARK: - Sensor Real-Time
     private func startHeartRateQuery() {
@@ -156,34 +220,38 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     
     // MARK: - Stress Logic + DEBOUNCE + COREMOTION
     private func process(_ samples: [HKSample]?) {
+        guard !isPaused else { return }
         guard let sample = samples?.last as? HKQuantitySample else { return }
         let bpm = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
         
         DispatchQueue.main.async {
             self.currentHeartRate = bpm
-            
+            ConnectivityManager.shared.sendHeartRate(bpm)
             // Formula: Considered Stress if BPM is more than 30% from RHR
             let stressThreshold = self.restingHeartRate * 1.30
             // Formula: Considered Back to relaxed if BPM falls near RHR
             let relaxedThreshold = self.restingHeartRate * 1.10
             
             if bpm >= stressThreshold {
-                if self.isStationary {
-                    self.stressStrikeCount += 1
-                    print("⚠️ Stress warning: \(self.stressStrikeCount)/\(self.requiredStressStrikes)")
+                if bpm >= stressThreshold {
                     
-                    if self.stressStrikeCount >= self.requiredStressStrikes {
-                        ConnectivityManager.shared.sendStressAlert()
-                        print("🔥 Validated Stress! (Stationary & Stable high BPM)")
-                        // Reset strike so it doesn't keep calling the function
-                        self.stressStrikeCount = 0
+                    if self.isStationary {
+                        
+                        self.stressStrikeCount += 1
+                        
+                        if self.stressStrikeCount >= self.requiredStressStrikes {
+                            
+                            ConnectivityManager.shared.sendStressAlert()
+                            
+                            self.stressStrikeCount = 0
+                        }
+                        
                     } else {
-                        // If BPM is high but moving, ignore and reset the stress count
-                        print("BPM is high but moving, ignore.")
+                        
                         self.stressStrikeCount = 0
+                        
                     }
                 }
-                ConnectivityManager.shared.sendStressAlert()
                 print("🔥 STRESS DETECTED! (BPM: \(bpm) passed threshold \(stressThreshold))")
             } else if bpm <= relaxedThreshold {
                 self.stressStrikeCount = 0
