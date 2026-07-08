@@ -56,12 +56,13 @@ struct ActivityView: View {
                     HStack {
 
                         Text("Activity")
-                            .font(.system(size: 42, weight: .bold))
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
                             .foregroundStyle(.primary)
 
                         Spacer()
 
-                        ConnectivityButton (size: 48, iconSize: 24){
+                        ConnectivityButton (size: 44, iconSize: 22){
                             showConnectivity.toggle()
                         }
                         .popover(
