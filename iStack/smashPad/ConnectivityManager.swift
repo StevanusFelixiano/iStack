@@ -17,6 +17,10 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     @Published var currentStatus: String = "relaxed"
     // Property to track watch session state on the iPhone UI
     @Published var isWatchSessionActive: Bool = false
+    @Published var elapsedTime: TimeInterval = 0
+    @Published var punchCount: Int = 0
+    @Published var watchCommandAction: String? = nil
+    
 #if os(iOS)
     
     @Published var isWatchConnected = false
@@ -60,6 +64,30 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
                 WCSession.default.transferUserInfo(message)
             }
         }
+    
+        func sendCommandToPhone(_ command: String) {
+            let message = ["commandFromWatch": command]
+            if WCSession.default.isReachable {
+                WCSession.default.sendMessage(message, replyHandler: nil)
+            } else {
+                WCSession.default.transferUserInfo(message)
+            }
+        }
+    
+    func sendSessionDataToWatch(elapsedTime: TimeInterval, punchCount: Int) {
+        let payload: [String: Any] = [
+            "elapsedTime": elapsedTime,
+            "punchCount": punchCount
+        ]
+        
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(payload, replyHandler: nil)
+        } else {
+            // Gunakan transferUserInfo agar data terakhir (state final)
+            // tetap sampai ke watchOS jika koneksi real-time terputus
+            WCSession.default.transferUserInfo(payload)
+        }
+    }
     
     // MARK: - Methods called by iPhone (Sending command to Apple Watch)
     func sendStartCommandToWatch() {
@@ -107,6 +135,20 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             
+            if let time = message["elapsedTime"] as? TimeInterval {
+                self.elapsedTime = time
+            }
+            if let punches = message["punchCount"] as? Int {
+                self.punchCount = punches
+            }
+            
+#if os(iOS)
+        if let command = message["commandFromWatch"] as? String {
+            self.watchCommandAction = command
+            print("📱 Phone received command from watch: \(command)")
+        }
+#endif
+
 #if os(iOS)
             if let bpm = message["heartRate"] as? Double {
                 self.latestHeartRate = bpm
@@ -153,13 +195,19 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
                     break
                 }
             }
-            
 #endif
         }
     }
     
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
         DispatchQueue.main.async {
+            
+            if let time = userInfo["elapsedTime"] as? TimeInterval {
+                self.elapsedTime = time
+            }
+            if let punches = userInfo["punchCount"] as? Int {
+                self.punchCount = punches
+            }
             
             // 1. Sinkronisasi UI iPhone
             if let sessionStatus = userInfo["sessionStatus"] as? Bool {
@@ -176,6 +224,13 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
                     HealthKitService.shared.stopSession()
                 }
             }
+#endif
+            
+#if os(iOS)
+        if let command = userInfo["commandFromWatch"] as? String {
+            self.watchCommandAction = command
+            print("📱 Phone received command from watch: \(command)")
+        }
 #endif
         }
     }

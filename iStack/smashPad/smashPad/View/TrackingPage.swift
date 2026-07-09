@@ -219,40 +219,31 @@ struct TrackingPage: View {
     
     // MARK: - Pause / Resume
     
-    private func togglePauseResume() {
-        withAnimation(.spring()) {
-            isPaused.toggle()
-            isExpanded.toggle()
-        }
-        
-        if isPaused {
-            
-            session.pausedAt = .now
-            
-            try? modelContext.save()
-            
-            pauseTimer()
-            
-            ConnectivityManager.shared.sendPauseCommandToWatch()
-            
-        } else {
-            
-            if let pausedAt = session.pausedAt {
-                
-                session.totalPausedDuration +=
-                Date().timeIntervalSince(pausedAt)
-                
-                session.pausedAt = nil
+    private func togglePauseResume(syncToWatch: Bool = true) {
+            withAnimation(.spring()) {
+                isPaused.toggle()
+                isExpanded.toggle()
             }
             
-            try? modelContext.save()
-            elapsedTime = displayedElapsedTime
-            
-            resumeTimer()
-            
-            ConnectivityManager.shared.sendResumeCommandToWatch()
+            if isPaused {
+                session.pausedAt = .now
+                try? modelContext.save()
+                pauseTimer()
+                if syncToWatch { ConnectivityManager.shared.sendPauseCommandToWatch()
+                }
+            } else {
+                if let pausedAt = session.pausedAt {
+                    session.totalPausedDuration += Date().timeIntervalSince(pausedAt)
+                    session.pausedAt = nil
+                }
+                try? modelContext.save()
+                elapsedTime = displayedElapsedTime
+                resumeTimer()
+                if syncToWatch {
+                    ConnectivityManager.shared.sendResumeCommandToWatch()
+                }
+            }
         }
-    }
     
     // MARK: - Session
     
@@ -346,7 +337,7 @@ struct TrackingPage: View {
                     isPaused: $isPaused,
                     isExpanded: $isExpanded,
                     elapsedTime: $elapsedTime,
-                    onPauseResume: togglePauseResume,
+                    onPauseResume: { togglePauseResume() },
                     onEndSession: endSession
                 )
             }
@@ -450,6 +441,29 @@ struct TrackingPage: View {
             stopTimer()
             falsePositiveTimer?.invalidate()
             falsePositiveTimer = nil
+        }
+        .onReceive(connectivity.$watchCommandAction) { command in
+            guard let action = command else { return }
+            
+            switch action {
+            case "pause":
+                if !isPaused { togglePauseResume(syncToWatch: false) }
+            case "resume":
+                if isPaused { togglePauseResume(syncToWatch: false) }
+            case "stop":
+                endSession()
+            default:
+                break
+            }
+            
+            // Reset nil agar action tidak terpanggil ulang saat layar refresh
+            connectivity.watchCommandAction = nil
+        }
+        .onChange(of: elapsedTime) { _, newValue in
+            connectivity.sendSessionDataToWatch(elapsedTime: newValue, punchCount: bluetooth.punchCount)
+        }
+        .onChange(of: bluetooth.punchCount) { _, newCount in
+            connectivity.sendSessionDataToWatch(elapsedTime: elapsedTime, punchCount: newCount)
         }
         .alert(
             "Discard Session?",
