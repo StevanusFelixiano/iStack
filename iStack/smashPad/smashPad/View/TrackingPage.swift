@@ -291,8 +291,6 @@ struct TrackingPage: View {
         
         stopTimer()
         
-        ConnectivityManager.shared.sendStopCommandToWatch()
-        
         if let pausedAt = session.pausedAt {
             
             session.totalPausedDuration +=
@@ -313,7 +311,7 @@ struct TrackingPage: View {
         elapsedTime = displayedElapsedTime
         
         try? modelContext.save()
-        
+        ConnectivityManager.shared.sendStopCommandToWatch()
         dismiss()
     }
     
@@ -465,15 +463,15 @@ struct TrackingPage: View {
             
             receivePunch(intensity)
         }
-        .onDisappear {
-            
-            stopTimer()
-            falsePositiveTimer?.invalidate()
-            falsePositiveTimer = nil
-        }
+//        .onDisappear {
+//            
+//            stopTimer()
+//            falsePositiveTimer?.invalidate()
+//            falsePositiveTimer = nil
+//        }
         .onReceive(connectivity.$watchCommandAction) { command in
             guard let action = command else { return }
-            
+            connectivity.watchCommandAction = nil
             switch action {
             case "pause":
                 if !isPaused { togglePauseResume(syncToWatch: false) }
