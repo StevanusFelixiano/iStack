@@ -23,7 +23,7 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     @Published var isSessionActive = false
     @Published var restingHeartRate: Double = 75.0 // Default fallback value
     @Published var isPaused = false
-    
+    @Published var isSimulating = false
     @Published var isStationary: Bool = true
     private var thresholdStartTime: Date?
     
@@ -193,6 +193,28 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
 
         print("▶️ Session Resumed")
     }
+    
+    func triggerDebugStress() {
+
+        isSimulating = true
+
+        currentHeartRate = restingHeartRate * 1.35
+
+        ConnectivityManager.shared.sendStressAlert()
+    }
+    
+    func triggerDebugRelax() {
+        isSimulating = true
+
+        currentHeartRate = restingHeartRate
+
+        ConnectivityManager.shared.sendRelaxedAlert()
+    }
+
+    func resetSimulation() {
+
+        isSimulating = false
+    }
 
 // MARK: - Sensor CoreMotion
 private func startMotionTracking() {
@@ -228,6 +250,9 @@ private func startMotionTracking() {
 
 // MARK: - Stress Logic + DEBOUNCE + COREMOTION
 private func process(_ samples: [HKSample]?) {
+    guard !isSimulating else {
+        return
+    }
     guard let validSamples = samples as? [HKQuantitySample], !validSamples.isEmpty else {
         return
     }

@@ -14,9 +14,14 @@ final class NotificationManager {
     func requestPermission() {
 
         UNUserNotificationCenter.current()
-            .requestAuthorization(
-                options: [.alert, .sound]
-            ) { _, _ in }
+            .requestAuthorization(options: [.alert, .sound]) { granted, error in
+
+                print("Permission:", granted)
+
+                if let error {
+                    print(error)
+                }
+            }
     }
 
     func showTensionNotification() {

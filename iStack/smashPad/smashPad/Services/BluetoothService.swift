@@ -118,6 +118,13 @@ class BluetoothService: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
     
+    func resetSession(){
+        DispatchQueue.main.async {
+            self.lastPunchIntensity = 0.0
+            self.punchCount = 0
+        }
+    }
+    
     // MARK: - SEND COMMAND TO ESP32
     func turnOnPillowLED() {
         guard let peripheral = pillowPeripheral, let rxChar = rxCharacteristic else { return }

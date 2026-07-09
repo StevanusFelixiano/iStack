@@ -11,16 +11,16 @@ enum DesignTokens {
 
     enum Colors {
         /// bg/base — Main screen background (tracking + summary)
-        static let background = Color.black
+        static let background = Color(.systemBackground)
         /// accent/purple — Primary color, play/resume button, active state highlights
         static let accent = Color(red: 125 / 255, green: 122 / 255, blue: 255 / 255) // #7D7AFF
         /// text/primary — Headlines, sub headline, text
-        static let textPrimary = Color.white
+        static let textPrimary = Color(.label)
         /// text/secondary — Inactive state / lower-attention text
-        static let textSecondary = Color(red: 154 / 255, green: 154 / 255, blue: 158 / 255) // #9A9A9E
+        static let textSecondary = Color(.secondaryLabel) // #9A9A9E
 
-        static let cardFill = Color.white.opacity(0.08)
-        static let chipFill = Color.white.opacity(0.12)
+        static let cardFill = Color(.secondarySystemBackground)
+        static let chipFill = Color(.tertiarySystemFill)
     }
 
     /// Semantic colors used specifically in heart-rate / tense-event data visualization,

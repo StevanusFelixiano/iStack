@@ -319,3 +319,10 @@ struct SessionRowView: View {
         .preferredColorScheme(.dark)
         .modelContainer(container)
 }
+
+#Preview {
+    let container = PreviewSupport.makeContainer()
+    return SummaryView()
+        .preferredColorScheme(.light)
+        .modelContainer(container)
+}

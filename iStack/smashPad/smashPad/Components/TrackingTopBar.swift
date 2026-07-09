@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TrackingTopBar: View {
-
+    @Environment(\.colorScheme) private var colorScheme
     @Binding var showConnectivity: Bool
     let onBack: () -> Void
 
@@ -17,13 +17,20 @@ struct TrackingTopBar: View {
         HStack {
 
             Button(action: onBack) {
-
                 Image(systemName: "chevron.backward")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
                     .frame(width: 48, height: 48)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Circle())
+                    .glassEffect(in: Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(
+                                colorScheme == .dark
+                                ? .white.opacity(0.25)
+                                : .black.opacity(0.15),
+                                lineWidth: 1.5
+                            )
+                    }
             }
 
             Spacer()
@@ -46,4 +53,14 @@ struct TrackingTopBar: View {
     )
     .padding()
     .preferredColorScheme(.dark)
+}
+
+#Preview {
+
+    TrackingTopBar(
+        showConnectivity: .constant(true),
+        onBack: {}
+    )
+    .padding()
+    .preferredColorScheme(.light)
 }

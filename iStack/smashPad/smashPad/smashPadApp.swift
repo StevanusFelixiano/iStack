@@ -13,9 +13,9 @@ struct smashPadApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppThemeManager {
+//            AppThemeManager {
                 RootView()
-            }
+//            }
 //            ContentView()
         }
         .modelContainer(for: [
