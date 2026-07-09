@@ -423,6 +423,8 @@ private func process(_ samples: [HKSample]?) {
                    Date().timeIntervalSince(start) >= 30 {
 
                     ConnectivityManager.shared.sendStressAlert()
+                    print("🔥 STRESS VALIDATED")
+
 
                     self.thresholdStartTime = nil
                 }
