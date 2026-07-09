@@ -46,6 +46,7 @@ struct SessionDetailView: View {
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showDetailSheet) {
             SessionDetailsSheet(session: session)
+                .presentationDetents([.large])
         }
     }
 
