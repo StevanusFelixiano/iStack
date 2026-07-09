@@ -12,7 +12,7 @@ struct TrackingInfo: View {
 
     let session: Session
 
-    var status: TrackingStatus = .monitoring
+    var status: TrackingStatus
 
     var body: some View {
 
@@ -63,10 +63,13 @@ struct TrackingInfo: View {
 
         container.mainContext.insert(session)
 
-        return TrackingInfo(session: session)
-            .padding()
-            .preferredColorScheme(.dark)
-            .modelContainer(container)
+        return TrackingInfo(
+            session: session,
+            status: .monitoring
+        )
+        .padding()
+        .preferredColorScheme(.dark)
+        .modelContainer(container)
 
     } catch {
 

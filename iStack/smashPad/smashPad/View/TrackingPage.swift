@@ -53,6 +53,25 @@ struct TrackingPage: View {
     @State
     private var falsePositiveTimer: Timer?
     
+    private var trackingStatus: TrackingStatus {
+
+        if isPaused {
+            return .paused
+        }
+
+        switch monitoringState {
+
+        case .relaxed:
+            return .monitoring
+
+        case .stressedPendingAction:
+            return .tenseDetected
+
+        case .recovering:
+            return .recovering
+        }
+    }
+    
     // MARK: - Timer
     
     private var displayedElapsedTime: TimeInterval {
@@ -317,8 +336,11 @@ struct TrackingPage: View {
                 }
                 .padding(.bottom, 36)
                 
-                TrackingInfo(session: session)
-                    .padding(.bottom, 100)
+                TrackingInfo(
+                    session: session,
+                    status: trackingStatus
+                )
+                .padding(.bottom, 100)
                 
                 PunchCounter(
                     punchCount: bluetooth.punchCount
