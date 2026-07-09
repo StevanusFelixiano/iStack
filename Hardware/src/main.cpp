@@ -24,17 +24,18 @@ BLECharacteristic *pTxCharacteristic = NULL;
 bool deviceConnected = false;
 
 // MPU6050 limit (smaller = more sensitive)
-const float PUNCH_THRESHOLD = 15.0; 
+const float PUNCH_THRESHOLD = 4.0; 
 
 // ==========================================
 // DEBOUNCE VARIABLES
 // ==========================================
 unsigned long lastPunchTime = 0;         // Record last punch time
-const unsigned long debounceDelay = 300; // Safe pause between punch (ms)
+const unsigned long debounceDelay = 200; // Safe pause between punch (ms)
 
 unsigned long lightOnTime = 0;           // Record when the light was turned on
 const unsigned long timeoutDuration = 10000; // 10 seconds timeout (ms)
 bool isTensed = false;                   // Track if pillow is currently waiting for a punch
+bool isPillowPunched = false;
 
 // ==========================================
 // BLE Connection Control
@@ -67,12 +68,14 @@ class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
             if (command == 0x01) {
                 digitalWrite(LED_PIN, HIGH);
                 isTensed = true;
+                isPillowPunched = false;
                 lightOnTime = millis(); // Start the 10 seconds timer
                 Serial.println("💡 STATUS: TENSED-> Pillow is ready to be smashed");
             } 
             else if (command == 0x00) {
                 digitalWrite(LED_PIN, LOW);
                 isTensed = false;       // Cancel the timer
+                isPillowPunched = false;
                 Serial.println("💤 STATUS: RELAXED -> pillow back to normal");
             }
         }
@@ -166,13 +169,13 @@ void loop() {
         unsigned long currentTime = millis();
 
         // C. Check for 10 seconds timeout
-        if (isTensed && (currentTime - lightOnTime >= timeoutDuration)) {
+        if (isTensed && !isPillowPunched && (currentTime - lightOnTime >= timeoutDuration)) {
             digitalWrite(LED_PIN, LOW); // Turn off lights automatically
             Serial.println("⏱️ TIMEOUT: 10 seconds passed without a punch. Light turned off.");
         }
 
         // D. Detect smash & Apply non-blocking debounce
-        if ((accel_magnitude > PUNCH_THRESHOLD || tiltState == HIGH) && (currentTime - lastPunchTime >= debounceDelay)) {
+        if ((accel_magnitude > PUNCH_THRESHOLD && tiltState == HIGH) && (currentTime - lastPunchTime >= debounceDelay)) {
             Serial.print("💥 PILLOW SMASHED! power: ");
             Serial.print(accel_magnitude);
             Serial.println(" m/s^2");
@@ -189,6 +192,7 @@ void loop() {
             }
 
             lastPunchTime = currentTime;
+            isPillowPunched = true;
         }
     }
     
