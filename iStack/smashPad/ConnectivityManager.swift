@@ -138,7 +138,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
                 switch command {
                     
                 case "start":
-                    HealthKitService.shared.startSession()
+                    HealthKitService.shared.startSession1() // ini yg diubah
                     
                 case "pause":
                     HealthKitService.shared.pauseSession()
@@ -171,7 +171,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             if let command = userInfo["command"] as? String {
                 print("⌚️ Watch received BACKGROUND command: \(command)")
                 if command == "start" {
-                    HealthKitService.shared.startSession()
+                    HealthKitService.shared.startSession1() // ini yg diubah
                 } else if command == "stop" {
                     HealthKitService.shared.stopSession()
                 }

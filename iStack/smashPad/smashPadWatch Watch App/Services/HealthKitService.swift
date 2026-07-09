@@ -64,6 +64,23 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
         }
     }
     
+    func requestAuthorization1(completion: @escaping (Bool) -> Void) {
+        guard let hrType = HKQuantityType.quantityType(forIdentifier: .heartRate),
+              let rhrType = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else {
+            completion(false)
+            return
+        }
+
+        let typesToRead: Set<HKObjectType> = [hrType, rhrType]
+
+        healthStore.requestAuthorization(toShare: nil, read: typesToRead) { success, _ in
+            DispatchQueue.main.async {
+                    self.isAuthorized = success
+                    completion(success)
+                }
+        }
+    }
+    
     // MARK: - 2. Minta Izin CoreMotion
     func requestMotionAuthorization(completion: @escaping (Bool) -> Void) {
         let now = Date()
@@ -141,6 +158,95 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
         }
         
         healthStore.execute(query)
+    }
+    
+    private func fetchRestingHeartRate1(
+        completion: @escaping () -> Void
+    ) {
+        guard let rhrType = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else {
+            return
+        }
+        
+        let oneWeekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
+        
+        let predicate = HKQuery.predicateForSamples(
+            withStart: oneWeekAgo,
+            end: Date(),
+            options: .strictStartDate
+        )
+        
+        let query = HKStatisticsQuery(
+            quantityType: rhrType,
+            quantitySamplePredicate: predicate,
+            options: .discreteAverage
+        ) { _, result, _ in
+
+            DispatchQueue.main.async {
+
+                if let average = result?.averageQuantity() {
+
+                    let rhr = average.doubleValue(for: HKUnit(from: "count/min"))
+
+                    self.restingHeartRate = rhr
+                    ConnectivityManager.shared.sendRestingHeartRate(rhr)
+                    print("Fetched RHR:", rhr)
+
+                } else {
+
+                    self.restingHeartRate = 75
+                    ConnectivityManager.shared.sendRestingHeartRate(75)
+                }
+
+                completion()
+            }
+        }
+
+        healthStore.execute(query)
+    }
+    
+    private func startWorkoutSession() {
+
+        isPaused = false
+
+        let configuration = HKWorkoutConfiguration()
+        configuration.activityType = .mindAndBody
+        configuration.locationType = .unknown
+
+        do {
+
+            workoutSession = try HKWorkoutSession(
+                healthStore: healthStore,
+                configuration: configuration
+            )
+
+            workoutSession?.delegate = self
+            workoutSession?.startActivity(with: Date())
+
+            startHeartRateQuery()
+            startMotionTracking()
+
+            isSessionActive = true
+
+            ConnectivityManager.shared.sendSessionSync(isActive: true)
+
+        } catch {
+
+            print(error.localizedDescription)
+        }
+    }
+    
+    func startSession1() {
+
+        guard !isSessionActive else { return }
+        guard workoutSession == nil else { return }
+
+        fetchRestingHeartRate1 { [weak self] in
+
+            guard let self else { return }
+
+            self.startWorkoutSession()
+            print("Workout starts with RHR:", restingHeartRate)
+        }
     }
     
     // MARK: - Session Control (FIXED: Separated into Start and Stop for iPhone Control)

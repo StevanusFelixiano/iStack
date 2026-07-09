@@ -97,10 +97,10 @@ struct ActivityView: View {
 
                             ActivityCard(title: category.name) {
 
-                                guard canStartSession else {
-                                    showDeviceAlert = true
-                                    return
-                                }
+//                                guard canStartSession else {
+//                                    showDeviceAlert = true
+//                                    return
+//                                }
 
                                 if hasSeenTrackingPermissionInfo {
                                     startSession(for: category)

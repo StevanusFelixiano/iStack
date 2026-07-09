@@ -17,7 +17,6 @@ struct ContentView: View {
         ScrollView {
             
             if hkService.isAuthorized && hkService.isMotionAuthorized {
-                
                 if hkService.isSessionActive {
                     mainDashboardView
                 } else {
@@ -67,7 +66,8 @@ struct ContentView: View {
             
             Button {
                 print("Tapped")
-                hkService.requestAuthorization { success in
+                //ubah disini
+                hkService.requestAuthorization1 { success in
                     print("Permission callback")
                     guard success else { return }
 

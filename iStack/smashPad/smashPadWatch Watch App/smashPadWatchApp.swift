@@ -14,7 +14,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     func handle(_ workoutConfiguration: HKWorkoutConfiguration) {
         print("⌚️ Watch menangkap sinyal Wake Up dari iPhone! Memulai session...")
         
-        HealthKitService.shared.startSession()
+        HealthKitService.shared.startSession1() //ini ubah
     }
 }
 
