@@ -43,9 +43,9 @@ struct ContentView: View {
         .animation(.easeInOut, value: currentStep)
         .animation(.easeInOut, value: hkService.isSessionActive)
         .onAppear {
-            if hkService.isAuthorized && isMotionAuthorized {
-                hkService.startSessionIfNeeded()
-            }
+//            if hkService.isAuthorized && isMotionAuthorized {
+//                hkService.startSessionIfNeeded()
+//            }
         }
     }
     
