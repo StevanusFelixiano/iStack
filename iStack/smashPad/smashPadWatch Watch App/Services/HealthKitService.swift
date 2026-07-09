@@ -10,6 +10,12 @@ import HealthKit
 import CoreMotion
 import Combine
 
+enum OnboardingStep {
+    case heartRate
+    case motion
+    case completed
+}
+
 class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     static let shared = HealthKitService()
     
@@ -18,6 +24,7 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     private let motionActivityManager = CMMotionActivityManager()
     private var activeHeartRateQuery: HKQuery?
     
+    @Published var onboardingStep: OnboardingStep = .heartRate
     @Published var isAuthorized = false
     @Published var currentHeartRate: Double = 0.0
     @Published var isSessionActive = false
