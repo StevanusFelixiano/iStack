@@ -126,24 +126,24 @@ class BluetoothService: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     // MARK: - SEND COMMAND TO ESP32
-    func turnOnPillowLED() {
-        guard let peripheral = pillowPeripheral, let rxChar = rxCharacteristic else { return }
-        
-        // Send 0x01 (TENSED)
+    func sendTensedState() {
+        guard let peripheral = pillowPeripheral,
+              let rxChar = rxCharacteristic else { return }
+
         let command: [UInt8] = [0x01]
-        let data = Data(command)
-        peripheral.writeValue(data, for: rxChar, type: .withResponse)
-        print("📱 iOS Sending: TURN ON LIGHT (0x01)")
+        peripheral.writeValue(Data(command), for: rxChar, type: .withResponse)
+
+        print("📱 iOS -> ESP32 : TENSED (0x01)")
     }
     
-    func turnOffPillowLED() {
-        guard let peripheral = pillowPeripheral, let rxChar = rxCharacteristic else { return }
-        
-        // Send 0x00 (RELAXED)
+    func sendRelaxedState() {
+        guard let peripheral = pillowPeripheral,
+              let rxChar = rxCharacteristic else { return }
+
         let command: [UInt8] = [0x00]
-        let data = Data(command)
-        peripheral.writeValue(data, for: rxChar, type: .withResponse)
-        print("📱 iOS Sending: TURN OFF LIGHT (0x00)")
+        peripheral.writeValue(Data(command), for: rxChar, type: .withResponse)
+
+        print("📱 iOS -> ESP32 : RELAXED (0x00)")
     }
     
     func scanAgain() {

@@ -396,6 +396,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth to connect to your thump pad.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Motion data is used to determine whether you are at rest so tension detection is only triggered when appropriate.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -437,6 +438,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth to connect to your thump pad.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your heart rate to detect sudden heart rate spike ";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app needs access to save recovery duration of your stress release as Mindful Minutes to Apple Health.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Motion data is used to determine whether you are at rest so tension detection is only triggered when appropriate.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -121,12 +121,13 @@ struct TrackingPage: View {
             lastRelaxedAt = .now
             firstPunchReceived = false
             falsePositiveTimer = nil
-            bluetooth.turnOffPillowLED()
+            bluetooth.sendRelaxedState()
             
         }
     }
     
     private func receivePunch(_ intensity: Double) {
+        print("💥 receivePunch:", intensity)
         guard monitoringState == .stressedPendingAction ||
               monitoringState == .recovering else {
 
@@ -138,8 +139,6 @@ struct TrackingPage: View {
             
             falsePositiveTimer?.invalidate()
             falsePositiveTimer = nil
-            
-            bluetooth.turnOffPillowLED()
             
             firstPunchReceived = true
             
@@ -172,7 +171,7 @@ struct TrackingPage: View {
     private func finishRecovery(save: Bool = true) {
         
         guard let event = activeTenseEvent else { return }
-        
+        bluetooth.sendRelaxedState()
         event.recoveryEndedAt = .now
         
         if save {
@@ -258,7 +257,7 @@ struct TrackingPage: View {
     // MARK: - Session
     
     private func cancelSession() {
-        bluetooth.turnOffPillowLED()
+        bluetooth.sendRelaxedState()
         falsePositiveTimer?.invalidate()
         falsePositiveTimer = nil
         
@@ -277,7 +276,6 @@ struct TrackingPage: View {
     }
     
     private func endSession() {
-        bluetooth.turnOffPillowLED()
         falsePositiveTimer?.invalidate()
         falsePositiveTimer = nil
         
@@ -295,6 +293,7 @@ struct TrackingPage: View {
         if activeTenseEvent != nil {
                 finishRecovery(save: false)
             } else {
+                bluetooth.sendRelaxedState()
                 monitoringState = .relaxed
             }
         
@@ -411,7 +410,7 @@ struct TrackingPage: View {
 
                 NotificationManager.shared.showTensionNotification()
 
-                bluetooth.turnOnPillowLED()
+                bluetooth.sendTensedState()
 
                 startFalsePositiveTimer()
                 
@@ -421,7 +420,7 @@ struct TrackingPage: View {
 
                 case .stressedPendingAction:
                     // false alarm
-                    bluetooth.turnOffPillowLED()
+                    bluetooth.sendRelaxedState()
 
                     falsePositiveTimer?.invalidate()
                     falsePositiveTimer = nil

@@ -21,7 +21,7 @@ struct ContentView: View {
                 if hkService.isSessionActive {
                     mainDashboardView
                 } else {
-//                    StandbyView() // Tampilkan layar tunggu
+                    mainDashboardView
                 }
                 
             }
@@ -66,7 +66,9 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
             
             Button {
+                print("Tapped")
                 hkService.requestAuthorization { success in
+                    print("Permission callback")
                     guard success else { return }
 
                     withAnimation {

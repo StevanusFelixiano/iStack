@@ -102,13 +102,13 @@ struct ContentView: View {
             .padding(.vertical)
         }
         // Listener to turn the light on/off based on the Apple Watch signal
-        .onChange(of: connectivity.currentStatus) { oldStatus, newStatus in
-            if newStatus == "stressed" {
-                bluetooth.turnOnPillowLED()
-            } else {
-                bluetooth.turnOffPillowLED()
-            }
-        }
+//        .onChange(of: connectivity.currentStatus) { oldStatus, newStatus in
+//            if newStatus == "stressed" {
+//                bluetooth.turnOnPillowLED()
+//            } else {
+//                bluetooth.turnOffPillowLED()
+//            }
+//        }
         .onAppear {
             // Ask permission when first shown
             connectivity.requestHealthKitAuthorizationOnPhone()
