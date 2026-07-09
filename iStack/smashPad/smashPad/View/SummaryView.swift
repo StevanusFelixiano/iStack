@@ -127,7 +127,7 @@ struct SummaryView: View {
                 statBlock(title: "Total Punches", value: "\(totalPunches) Times")
                 Spacer()
             }
-            HStack {
+            HStack (spacing:38) {
                 statBlock(title: "Tense Duration", value: totalTenseDuration.formattedMinSecLetters)
                 Spacer()
                 statBlock(title: "Avg. Recovery Time", value: averageRecoveryTimeAcrossRange.formattedMinSecLetters)
