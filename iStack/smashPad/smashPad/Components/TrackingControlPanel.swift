@@ -34,12 +34,12 @@ struct TrackingControlPanel: View {
             .frame(height: isExpanded ? 310 : 230)
             .overlay {
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
-                            .stroke(
-                                colorScheme == .dark
-                                ? Color.white.opacity(0.08)
-                                : Color.black.opacity(0.08),
-                                lineWidth: 1
-                            )
+                    .stroke(
+                        colorScheme == .dark
+                        ? Color.white.opacity(0.08)
+                        : Color.black.opacity(0.2),
+                        lineWidth: 1
+                    )
                 VStack(spacing: 24) {
                     
                     Capsule()
@@ -132,6 +132,14 @@ struct TrackingControlPanel: View {
                             
                         }
                     }
+            )
+            .shadow(
+                color: colorScheme == .light
+                    ? .black.opacity(0.08)
+                    : .clear,
+                radius: 20,
+                x: 0,
+                y: -4
             )
             .padding(.horizontal, 8)
             .animation(.spring(), value: isExpanded)

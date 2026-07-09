@@ -17,7 +17,7 @@ enum MonitoringState {
 struct TrackingPage: View {
     @StateObject
     private var connectivity = ConnectivityManager.shared
-    
+    @Environment(\.colorScheme) private var colorScheme
     @Bindable var session: Session
     
     @Environment(\.dismiss) private var dismiss
@@ -340,6 +340,7 @@ struct TrackingPage: View {
                     onPauseResume: { togglePauseResume() },
                     onEndSession: endSession
                 )
+                .padding(.horizontal, colorScheme == .light ? 8 : 0)
             }
             .ignoresSafeArea(edges: .bottom)
             
@@ -514,6 +515,48 @@ struct TrackingPage: View {
         return NavigationStack {
             
             TrackingPage(session: session)
+            
+        }
+        .modelContainer(container)
+        
+    } catch {
+        
+        return Text("Preview Error")
+        
+    }
+}
+
+#Preview {
+    
+    do {
+        
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        
+        let container = try ModelContainer(
+            for: Category.self,
+            Session.self,
+            HeartRate.self,
+            TenseEvent.self,
+            Punch.self,
+            configurations: config
+        )
+        
+        let category = Category(name: "Studying")
+        
+        container.mainContext.insert(category)
+        
+        let session = Session(
+            category: category,
+            startTime: .now,
+            averageRestingHR: 75
+        )
+        
+        container.mainContext.insert(session)
+        
+        return NavigationStack {
+            
+            TrackingPage(session: session)
+                .preferredColorScheme(.dark)
             
         }
         .modelContainer(container)
