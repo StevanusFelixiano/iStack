@@ -119,6 +119,7 @@ struct ActivityView: View {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
+                            .tint(Color.red)
                         }
 
                         HStack {
