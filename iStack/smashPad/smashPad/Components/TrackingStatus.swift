@@ -22,10 +22,10 @@ enum TrackingStatus {
             return "heart"
 
         case .tenseDetected:
-            return "exclamationmark.triangle.fill"
+            return "heart"
 
         case .recovering:
-            return "heart.fill"
+            return "heart"
 
         case .paused:
             return "pause.fill"
