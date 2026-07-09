@@ -32,6 +32,7 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
     @Published var isPaused = false
     @Published var isSimulating = false
     @Published var isStationary: Bool = true
+    @Published var isMotionAuthorized = false
     private var thresholdStartTime: Date?
     
     private override init() {
@@ -39,33 +40,50 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
         _ = ConnectivityManager.shared
     }
     
-    func requestAuthorization() {
+    func requestAuthorization(completion: @escaping (Bool) -> Void) {
         guard let hrType = HKQuantityType.quantityType(forIdentifier: .heartRate),
               let rhrType = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else {
+            completion(false)
             return
         }
-        
+
         let typesToRead: Set<HKObjectType> = [hrType, rhrType]
-        
+
         healthStore.requestAuthorization(toShare: nil, read: typesToRead) { success, _ in
             DispatchQueue.main.async {
                 self.isAuthorized = success
-                
+
+                // Langsung update UI
+                completion(success)
+
+                // Fetch RHR di background
                 if success {
                     self.fetchRestingHeartRate()
-                    self.startSessionIfNeeded()
                 }
             }
         }
     }
     
     // MARK: - 2. Minta Izin CoreMotion
-    func requestMotionAuthorization() {
+    func requestMotionAuthorization(completion: @escaping (Bool) -> Void) {
         let now = Date()
-        motionActivityManager.queryActivityStarting(from: now.addingTimeInterval(-1), to: now, to: .main) { _, _ in
+
+        motionActivityManager.queryActivityStarting(
+            from: now.addingTimeInterval(-1),
+            to: now,
+            to: .main
+        ) { _, error in
+
             DispatchQueue.main.async {
-                self.onboardingStep = .completed
-                self.isAuthorized = true
+                let success = (error == nil)
+
+                self.isMotionAuthorized = success
+
+                if success {
+                    self.onboardingStep = .completed
+                }
+
+                completion(success)
             }
         }
     }

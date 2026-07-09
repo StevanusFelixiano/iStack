@@ -11,6 +11,7 @@ struct OnboardPage: View {
 
     @AppStorage("hasSeenOnboarding")
     private var hasSeenOnboarding = false
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
 
@@ -44,10 +45,10 @@ struct OnboardPage: View {
 
                     Text("Get Started")
                         .font(.headline)
-                        .foregroundStyle(Color(.systemBackground))
+                        .foregroundStyle(colorScheme == .dark ? .black : .white)
                         .frame(maxWidth: 180)
                         .frame(height: 56)
-                        .background(.white)
+                        .background(colorScheme == .dark ? .white : .black)
                         .clipShape(RoundedRectangle(cornerRadius: 18))
                 }
 
@@ -62,4 +63,8 @@ struct OnboardPage: View {
 #Preview {
     OnboardPage()
         .preferredColorScheme(.dark)
+}
+#Preview {
+    OnboardPage()
+        .preferredColorScheme(.light)
 }

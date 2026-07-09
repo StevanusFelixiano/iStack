@@ -12,12 +12,11 @@ struct ContentView: View {
     @StateObject private var hkService = HealthKitService.shared
     
     @State private var currentStep: PermissionStep = .heartRate
-    @State private var isMotionAuthorized: Bool = false
     
     var body: some View {
         ScrollView {
             
-            if hkService.isAuthorized && isMotionAuthorized {
+            if hkService.isAuthorized && hkService.isMotionAuthorized {
                 
                 if hkService.isSessionActive {
                     mainDashboardView
@@ -67,9 +66,12 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
             
             Button {
-                hkService.requestAuthorization()
-                withAnimation {
-                    currentStep = .bodyMovement
+                hkService.requestAuthorization { success in
+                    guard success else { return }
+
+                    withAnimation {
+                        currentStep = .bodyMovement
+                    }
                 }
             } label: {
                 Text("Accept")
@@ -99,12 +101,12 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
             
             Button {
-                 hkService.requestMotionAuthorization()
-                
-                isMotionAuthorized = true
-                
-                withAnimation {
-                    currentStep = .completed
+                hkService.requestMotionAuthorization { success in
+                    guard success else { return }
+
+                    withAnimation {
+                        currentStep = .completed
+                    }
                 }
             } label: {
                 Text("Accept")
