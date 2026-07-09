@@ -322,10 +322,16 @@ struct TrackingPage: View {
     var body: some View {
         
         ZStack {
-            
-            Image("GradientOval1")
-                .resizable()
-                .scaledToFill()
+            ZStack {
+                Image("GradientOval1")
+                    .resizable()
+                    .scaledToFill()
+
+                if trackingStatus == .tenseDetected {
+                    Color.orange
+                        .opacity(0.6)
+                }
+            }
             
             VStack(spacing: 0) {
                 
