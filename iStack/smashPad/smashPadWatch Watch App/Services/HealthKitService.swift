@@ -59,6 +59,17 @@ class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate {
         }
     }
     
+    // MARK: - 2. Minta Izin CoreMotion
+    func requestMotionAuthorization() {
+        let now = Date()
+        motionActivityManager.queryActivityStarting(from: now.addingTimeInterval(-1), to: now, to: .main) { _, _ in
+            DispatchQueue.main.async {
+                self.onboardingStep = .completed
+                self.isAuthorized = true
+            }
+        }
+    }
+
     func startSessionIfNeeded() {
 
         guard isAuthorized else { return }

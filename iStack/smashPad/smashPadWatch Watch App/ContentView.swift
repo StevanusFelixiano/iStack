@@ -1,7 +1,7 @@
 import SwiftUI
 import HealthKit
 
-// 1. Define the enum for the permission flow steps
+// MARK: - Enum untuk Alur Izin
 enum PermissionStep {
     case heartRate
     case bodyMovement
@@ -12,26 +12,36 @@ struct ContentView: View {
     @StateObject private var hkService = HealthKitService.shared
     
     @State private var currentStep: PermissionStep = .heartRate
-    
     @State private var isMotionAuthorized: Bool = false
     
     var body: some View {
         ScrollView {
             
             if hkService.isAuthorized && isMotionAuthorized {
-                mainDashboardView
-            } else {
-    
+                
+                if hkService.isSessionActive {
+                    mainDashboardView
+                } else {
+//                    StandbyView() // Tampilkan layar tunggu
+                }
+                
+            }
+            else {
                 switch currentStep {
                 case .heartRate:
                     heartRatePermissionView
+                        .transition(.push(from: .trailing))
                 case .bodyMovement:
                     bodyMovementPermissionView
+                        .transition(.push(from: .trailing))
                 case .completed:
-                    ProgressView("Loading...") // Temporary state while services update
+                    ProgressView("Loading...")
+                        .transition(.opacity)
                 }
             }
         }
+        .animation(.easeInOut, value: currentStep)
+        .animation(.easeInOut, value: hkService.isSessionActive)
         .onAppear {
             if hkService.isAuthorized && isMotionAuthorized {
                 hkService.startSessionIfNeeded()
@@ -39,7 +49,7 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - Subviews
+    // MARK: - Subviews Onboarding & Dashboard
     
     private var heartRatePermissionView: some View {
         VStack(spacing: 10) {
@@ -58,7 +68,6 @@ struct ContentView: View {
             
             Button {
                 hkService.requestAuthorization()
-                // 4. Transition to the next screen
                 withAnimation {
                     currentStep = .bodyMovement
                 }
@@ -90,11 +99,9 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
             
             Button {
-                // Execute motion permission logic here (e.g., CMMotionActivityManager)
-                // motionService.requestAuthorization()
+                 hkService.requestMotionAuthorization()
                 
-                // Update final states
-                isMotionAuthorized = true // Hardcoded for simulation, replace with actual service check
+                isMotionAuthorized = true
                 
                 withAnimation {
                     currentStep = .completed
@@ -147,20 +154,20 @@ struct ContentView: View {
             
             HStack(spacing: 8) {
                 Button("🔥 Stress") {
-                    hkService.triggerDebugStress()
+                     hkService.triggerDebugStress()
                 }
                 .tint(.red)
                 .buttonStyle(.borderedProminent)
                 
                 Button("🍏 Relax") {
-                    hkService.triggerDebugRelax()
+                     hkService.triggerDebugRelax()
                 }
                 .tint(.green)
                 .buttonStyle(.borderedProminent)
             }
             
             Button("🔄 Reset") {
-                hkService.resetSimulation()
+                 hkService.resetSimulation()
             }
             .tint(.blue)
             .buttonStyle(.borderedProminent)
@@ -173,3 +180,8 @@ struct ContentView: View {
 #Preview{
     ContentView()
 }
+
+//// MARK: - Tampilan Standby (Menunggu Sesi dari iPhone)
+//struct StandbyView: View {
+//    @State private var isPulsing = false
+
