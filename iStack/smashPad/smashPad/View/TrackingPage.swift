@@ -119,11 +119,10 @@ struct TrackingPage: View {
             
             monitoringState = .relaxed
             lastRelaxedAt = .now
-            
-            bluetooth.turnOffPillowLED()
-            
             firstPunchReceived = false
             falsePositiveTimer = nil
+            bluetooth.turnOffPillowLED()
+            
         }
     }
     
@@ -293,8 +292,11 @@ struct TrackingPage: View {
             
             session.pausedAt = nil
         }
-        monitoringState = .relaxed
-        finishRecovery(save:false)
+        if activeTenseEvent != nil {
+                finishRecovery(save: false)
+            } else {
+                monitoringState = .relaxed
+            }
         
         session.endTime = .now
         
@@ -384,7 +386,6 @@ struct TrackingPage: View {
         }
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .tabBar)
-        .preferredColorScheme(.dark)
         .onAppear {
             elapsedTime = displayedElapsedTime
             
@@ -401,17 +402,17 @@ struct TrackingPage: View {
             switch status {
                 
             case "stressed":
+
                 guard monitoringState == .relaxed else {
                     return
                 }
 
-                guard Date().timeIntervalSince(lastRelaxedAt) >= cooldown else {
-                    return
-                }
-
                 monitoringState = .stressedPendingAction
+
                 NotificationManager.shared.showTensionNotification()
+
                 bluetooth.turnOnPillowLED()
+
                 startFalsePositiveTimer()
                 
             case "relaxed":

@@ -10,7 +10,7 @@ import SwiftData
 
 struct ActivityView: View {
     @State private var selectedCategory: Category?
-
+    @State private var showDeviceAlert = false
     @AppStorage("hasSeenTrackingPermissionInfo")
     private var hasSeenTrackingPermissionInfo = false
     
@@ -28,6 +28,7 @@ struct ActivityView: View {
     }
     
     private func startSession(for category: Category) {
+        BluetoothService.shared.resetSession()
         let session = Session(
             category: category,
             startTime: .now,
@@ -40,6 +41,11 @@ struct ActivityView: View {
         ConnectivityManager.shared.sendStartCommandToWatch()
 
         path.append(session)
+    }
+    
+    private var canStartSession: Bool {
+        ConnectivityManager.shared.isWatchConnected &&
+        BluetoothService.shared.isConnected
     }
 
     var body: some View {
@@ -91,12 +97,14 @@ struct ActivityView: View {
 
                             ActivityCard(title: category.name) {
 
+                                guard canStartSession else {
+                                    showDeviceAlert = true
+                                    return
+                                }
+
                                 if hasSeenTrackingPermissionInfo {
-
                                     startSession(for: category)
-
                                 } else {
-
                                     selectedCategory = category
                                 }
                             }
@@ -175,6 +183,19 @@ struct ActivityView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
             }
+            .alert(
+                "Devices Not Ready",
+                isPresented: $showDeviceAlert
+            ) {
+
+                Button("OK", role: .cancel) { }
+
+            } message: {
+
+                Text("""
+                Please make sure your Apple Watch and Smart Pillow are connected before starting a monitoring session.
+                """)
+            }
             .task {
                 NotificationManager.shared.requestPermission()
                 ConnectivityManager.shared.requestHealthKitAuthorizationOnPhone()
@@ -199,5 +220,10 @@ private extension ActivityView {
 #Preview {
     ActivityView()
         .preferredColorScheme(.dark)
+        .modelContainer(for: Category.self, inMemory: true)
+}
+#Preview {
+    ActivityView()
+        .preferredColorScheme(.light)
         .modelContainer(for: Category.self, inMemory: true)
 }

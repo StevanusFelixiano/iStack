@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TrackingControlPanel: View {
-    
+    @Environment(\.colorScheme) private var colorScheme
     @Binding var isPaused: Bool
     @Binding var isExpanded: Bool
     @Binding var elapsedTime: TimeInterval
@@ -33,7 +33,13 @@ struct TrackingControlPanel: View {
             .frame(maxWidth: .infinity)
             .frame(height: isExpanded ? 310 : 230)
             .overlay {
-                
+                RoundedRectangle(cornerRadius: 32, style: .continuous)
+                            .stroke(
+                                colorScheme == .dark
+                                ? Color.white.opacity(0.08)
+                                : Color.black.opacity(0.08),
+                                lineWidth: 1
+                            )
                 VStack(spacing: 24) {
                     
                     Capsule()
@@ -127,7 +133,7 @@ struct TrackingControlPanel: View {
                         }
                     }
             )
-            .padding(.horizontal, 2)
+            .padding(.horizontal, 8)
             .animation(.spring(), value: isExpanded)
     }
 }
@@ -142,4 +148,16 @@ struct TrackingControlPanel: View {
         onEndSession: {}
     )
     .preferredColorScheme(.dark)
+}
+
+#Preview {
+    
+    TrackingControlPanel(
+        isPaused: .constant(false),
+        isExpanded: .constant(false),
+        elapsedTime: .constant(75),
+        onPauseResume: {},
+        onEndSession: {}
+    )
+    .preferredColorScheme(.light)
 }

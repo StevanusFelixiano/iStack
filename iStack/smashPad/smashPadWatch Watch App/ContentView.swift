@@ -84,22 +84,24 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                     
                     HStack(spacing: 8) {
-                        // Button to force stressed condition (set BPM +10 from threshold)
                         Button("🔥 Stress") {
-                            hkService.currentHeartRate = stressThreshold + 10
-                            ConnectivityManager.shared.sendStressAlert()
+                            hkService.triggerDebugStress()
                         }
                         .tint(.red)
                         .buttonStyle(.borderedProminent)
-                        
-                        // Button to force relaxed condition (BPM back to average resting heart rate)
+
                         Button("🍏 Relax") {
-                            hkService.currentHeartRate = hkService.restingHeartRate
-                            ConnectivityManager.shared.sendRelaxedAlert()
+                            hkService.triggerDebugRelax()
                         }
                         .tint(.green)
                         .buttonStyle(.borderedProminent)
                     }
+
+                    Button("🔄 Reset") {
+                        hkService.resetSimulation()
+                    }
+                    .tint(.blue)
+                    .buttonStyle(.borderedProminent)
                 }
             }
             .onAppear {

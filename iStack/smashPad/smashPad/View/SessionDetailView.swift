@@ -161,3 +161,13 @@ struct SessionDetailView: View {
     .preferredColorScheme(.dark)
     .modelContainer(container)
 }
+#Preview {
+    let container = PreviewSupport.makeContainer()
+    let session = PreviewSupport.fetchSessions(from: container).first { $0.category.name == "Gaming" }!
+
+    return NavigationStack {
+        SessionDetailView(session: session)
+    }
+    .preferredColorScheme(.light)
+    .modelContainer(container)
+}

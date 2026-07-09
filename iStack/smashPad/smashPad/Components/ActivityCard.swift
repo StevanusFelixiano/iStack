@@ -29,7 +29,11 @@ struct ActivityCard: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(.black)
                     .frame(width: 52, height: 52)
-                    .background(Color(red: 109/255, green: 124/255, blue: 255/255))
+                    .background(
+                        colorScheme == .dark
+                        ? Color(red: 109/255, green: 124/255, blue: 255/255)
+                        : .white
+                    )
                     .clipShape(Circle())
             }
         }
@@ -51,3 +55,13 @@ struct ActivityCard: View {
     .padding()
     .preferredColorScheme(.dark)
 }
+
+#Preview {
+    ActivityCard(
+        title: "Studying",
+        action: {}
+    )
+    .padding()
+    .preferredColorScheme(.light)
+}
+

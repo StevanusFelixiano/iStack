@@ -9,9 +9,6 @@ import SwiftUI
 
 struct AppThemeManager<Content: View>: View {
 
-    @AppStorage("isDarkMode")
-    private var isDarkMode = true
-
     let content: Content
 
     init(@ViewBuilder content: () -> Content) {
@@ -20,6 +17,5 @@ struct AppThemeManager<Content: View>: View {
 
     var body: some View {
         content
-            .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
