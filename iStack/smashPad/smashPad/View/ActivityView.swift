@@ -28,6 +28,7 @@ struct ActivityView: View {
     }
     
     private func startSession(for category: Category) {
+        ConnectivityManager.shared.watchCommandAction = nil
         BluetoothService.shared.resetSession()
         let session = Session(
             category: category,

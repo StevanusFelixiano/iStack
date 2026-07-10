@@ -66,6 +66,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     
         func sendCommandToPhone(_ command: String) {
+            print("⌚️ SEND TO PHONE:", command)
             let message = ["commandFromWatch": command]
             if WCSession.default.isReachable {
                 WCSession.default.sendMessage(message, replyHandler: nil)
@@ -118,6 +119,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     }
     
     func sendStopCommandToWatch() {
+        print("📱 SEND STOP TO WATCH")
         let stopMessage = ["command": "stop"]
         
         if WCSession.default.isReachable {
@@ -144,6 +146,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             
 #if os(iOS)
         if let command = message["commandFromWatch"] as? String {
+            print("📱 RECEIVED COMMAND:", command)
             self.watchCommandAction = command
             print("📱 Phone received command from watch: \(command)")
         }
@@ -228,6 +231,7 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             
 #if os(iOS)
         if let command = userInfo["commandFromWatch"] as? String {
+            print("📱 RECEIVED USERINFO COMMAND:", command)
             self.watchCommandAction = command
             print("📱 Phone received command from watch: \(command)")
         }

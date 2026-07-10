@@ -285,7 +285,11 @@ struct TrackingPage: View {
         dismiss()
     }
     
-    private func endSession() {
+    private func endSession(fromWatch: Bool = false) {
+        guard session.endTime == nil else {
+                return
+            }
+        print("📱 endSession called")
         falsePositiveTimer?.invalidate()
         falsePositiveTimer = nil
         
@@ -311,7 +315,9 @@ struct TrackingPage: View {
         elapsedTime = displayedElapsedTime
         
         try? modelContext.save()
-        ConnectivityManager.shared.sendStopCommandToWatch()
+        if !fromWatch {
+            ConnectivityManager.shared.sendStopCommandToWatch()
+        }
         dismiss()
     }
     
@@ -364,7 +370,9 @@ struct TrackingPage: View {
                     isExpanded: $isExpanded,
                     elapsedTime: $elapsedTime,
                     onPauseResume: { togglePauseResume() },
-                    onEndSession: endSession
+                    onEndSession: {
+                        endSession(fromWatch: false)
+                    }
                 )
                 .padding(.horizontal, colorScheme == .light ? 8 : 0)
             }
@@ -470,6 +478,7 @@ struct TrackingPage: View {
 //            falsePositiveTimer = nil
 //        }
         .onReceive(connectivity.$watchCommandAction) { command in
+            print("📱 TrackingPage received:", command ?? "nil")
             guard let action = command else { return }
             connectivity.watchCommandAction = nil
             switch action {
@@ -478,7 +487,8 @@ struct TrackingPage: View {
             case "resume":
                 if isPaused { togglePauseResume(syncToWatch: false) }
             case "stop":
-                endSession()
+                print("📱 END SESSION FROM WATCH")
+                endSession(fromWatch: true)
             default:
                 break
             }
